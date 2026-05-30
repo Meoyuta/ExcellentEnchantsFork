@@ -1,0 +1,28 @@
+Definition:
+  DisplayName: <c:#279CF5>龙息之箭</c>
+  Description:
+  - <gray>%enchantment_trigger_chance%% 几率射出带有龙息效果的箭矢（R=%radius%，%duration%秒）。</gray>
+  Weight: 2
+  MaxLevel: 3
+  MinCost:
+    Base: 1
+    Per_Level: 19
+  MaxCost:
+    Base: 6
+    Per_Level: 19
+  AnvilCost: 7
+  SupportedItems: bow_crossbow
+  PrimaryItems: bow_crossbow
+  Exclusives:
+  - excellentenchants:ender_bow
+  - excellentenchants:bomber
+  - excellentenchants:ghast
+Distribution:
+  Treasure: false
+  Tradeable: true
+  TradeTypes:
+  - SWAMP_SPECIAL
+  On_Mob_Spawn_Equipment: true
+  On_Traded_Equipment: true
+  On_Random_Loot: true
+  Discoverable: true

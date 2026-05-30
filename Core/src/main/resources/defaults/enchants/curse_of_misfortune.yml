@@ -1,0 +1,27 @@
+Definition:
+  DisplayName: <c:#279CF5>厄运诅咒</c>
+  Description:
+  - <gray>%enchantment_trigger_chance%% 几率使生物/方块无掉落物或战利品。</gray>
+  Weight: 5
+  MaxLevel: 3
+  MinCost:
+    Base: 1
+    Per_Level: 18
+  MaxCost:
+    Base: 5
+    Per_Level: 18
+  AnvilCost: 2
+  SupportedItems: tools_weapons
+  PrimaryItems: tools_weapons
+  Exclusives:
+  - minecraft:looting
+  - minecraft:fortune
+Distribution:
+  Treasure: true
+  Tradeable: true
+  TradeTypes:
+  - TAIGA_COMMON
+  On_Mob_Spawn_Equipment: false
+  On_Traded_Equipment: false
+  On_Random_Loot: true
+  Discoverable: false

@@ -1,0 +1,28 @@
+Definition:
+  DisplayName: <c:#279CF5>照明矢</c>
+  Description:
+  - <gray>%enchantment_trigger_chance%% 几率在箭矢落点处生成火把。</gray>
+  Weight: 5
+  MaxLevel: 1
+  MinCost:
+    Base: 4
+    Per_Level: 45
+  MaxCost:
+    Base: 45
+    Per_Level: 45
+  AnvilCost: 5
+  SupportedItems: bow
+  PrimaryItems: bow
+  Exclusives:
+  - excellentenchants:ender_bow
+  - excellentenchants:bomber
+  - excellentenchants:ghast
+Distribution:
+  Treasure: true
+  Tradeable: true
+  TradeTypes:
+  - SNOW_COMMON
+  On_Mob_Spawn_Equipment: false
+  On_Traded_Equipment: false
+  On_Random_Loot: true
+  Discoverable: false

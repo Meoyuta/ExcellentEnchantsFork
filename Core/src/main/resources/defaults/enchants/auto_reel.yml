@@ -1,0 +1,25 @@
+Definition:
+  DisplayName: <c:#279CF5>自动收杆</c>
+  Description:
+  - <gray>鱼儿上钩时自动收线。</gray>
+  Weight: 1
+  MaxLevel: 1
+  MinCost:
+    Base: 2
+    Per_Level: 48
+  MaxCost:
+    Base: 48
+    Per_Level: 48
+  AnvilCost: 4
+  SupportedItems: fishing_rod
+  PrimaryItems: fishing_rod
+  Exclusives: []
+Distribution:
+  Treasure: true
+  Tradeable: true
+  TradeTypes:
+  - JUNGLE_SPECIAL
+  On_Mob_Spawn_Equipment: false
+  On_Traded_Equipment: false
+  On_Random_Loot: true
+  Discoverable: false

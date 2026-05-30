@@ -1,0 +1,26 @@
+Definition:
+  DisplayName: <c:#279CF5>易碎诅咒</c>
+  Description:
+  - <gray>%enchantment_trigger_chance%% 几率额外消耗 %amount% 点耐久度。</gray>
+  Weight: 10
+  MaxLevel: 3
+  MinCost:
+    Base: 2
+    Per_Level: 18
+  MaxCost:
+    Base: 7
+    Per_Level: 18
+  AnvilCost: 1
+  SupportedItems: breakable
+  PrimaryItems: breakable
+  Exclusives:
+  - minecraft:unbreaking
+Distribution:
+  Treasure: true
+  Tradeable: true
+  TradeTypes:
+  - SAVANNA_COMMON
+  On_Mob_Spawn_Equipment: false
+  On_Traded_Equipment: false
+  On_Random_Loot: true
+  Discoverable: false

@@ -6,14 +6,12 @@
     <parent>
         <groupId>su.nightexpress.excellentenchants</groupId>
         <artifactId>ExcellentEnchants</artifactId>
-        <version>5.4.3</version>
+        <version>5.4.4</version>
     </parent>
 
     <artifactId>tooltip-protocollib</artifactId>
 
     <properties>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -35,7 +33,7 @@
         <dependency>
             <groupId>su.nightexpress.excellentenchants</groupId>
             <artifactId>API</artifactId>
-            <version>5.4.3</version>
+            <version>5.4.4</version>
         </dependency>
 
         <dependency>

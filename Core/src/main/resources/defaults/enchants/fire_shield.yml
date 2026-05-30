@@ -1,0 +1,25 @@
+Definition:
+  DisplayName: <c:#279CF5>火焰护盾</c>
+  Description:
+  - <gray>%enchantment_trigger_chance%% 几率点燃攻击者，持续 %duration% 秒。</gray>
+  Weight: 2
+  MaxLevel: 4
+  MinCost:
+    Base: 4
+    Per_Level: 15
+  MaxCost:
+    Base: 9
+    Per_Level: 15
+  AnvilCost: 2
+  SupportedItems: chestplate_elytra
+  PrimaryItems: chestplate
+  Exclusives: []
+Distribution:
+  Treasure: false
+  Tradeable: true
+  TradeTypes:
+  - DESERT_COMMON
+  On_Mob_Spawn_Equipment: true
+  On_Traded_Equipment: true
+  On_Random_Loot: true
+  Discoverable: true

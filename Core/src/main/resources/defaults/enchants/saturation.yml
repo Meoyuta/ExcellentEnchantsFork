@@ -1,0 +1,25 @@
+Definition:
+  DisplayName: <c:#279CF5>饱食</c>
+  Description:
+  - <gray>每隔几秒恢复 %amount% 食物和饱和度。</gray>
+  Weight: 2
+  MaxLevel: 2
+  MinCost:
+    Base: 4
+    Per_Level: 27
+  MaxCost:
+    Base: 10
+    Per_Level: 27
+  AnvilCost: 1
+  SupportedItems: helmet
+  PrimaryItems: helmet
+  Exclusives: []
+Distribution:
+  Treasure: false
+  Tradeable: true
+  TradeTypes:
+  - SAVANNA_SPECIAL
+  On_Mob_Spawn_Equipment: true
+  On_Traded_Equipment: true
+  On_Random_Loot: true
+  Discoverable: true

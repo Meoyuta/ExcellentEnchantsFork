@@ -7,22 +7,19 @@
     <groupId>su.nightexpress.excellentenchants</groupId>
     <artifactId>ExcellentEnchants</artifactId>
     <packaging>pom</packaging>
-    <version>5.4.3</version>
+    <version>5.4.4</version>
     <modules>
         <module>API</module>
         <module>Core</module>
-        <module>MC_1_21_8</module>
-        <module>MC_1_21_10</module>
-        <module>spigot-1.21.11</module>
-        <module>spigot-26.1.2</module>
         <module>tooltip-packetevents</module>
         <module>tooltip-protocollib</module>
-        <module>compat-mythicmobs</module>
+        <!-- <module>compat-mythicmobs</module> -->
     </modules>
 
     <properties>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
+	<maven.compiler.source>25</maven.compiler.source>
+	<maven.compiler.target>25</maven.compiler.target>
+	<maven.compiler.release>25</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -60,5 +57,15 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.14.0</version>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>

@@ -1,0 +1,25 @@
+Definition:
+  DisplayName: <c:#279CF5>捷掠</c>
+  Description:
+  - <gray>击杀生物时将其掉落物直接移至你的物品栏。</gray>
+  Weight: 2
+  MaxLevel: 1
+  MinCost:
+    Base: 4
+    Per_Level: 52
+  MaxCost:
+    Base: 52
+    Per_Level: 52
+  AnvilCost: 1
+  SupportedItems: swords_axes
+  PrimaryItems: sword
+  Exclusives: []
+Distribution:
+  Treasure: false
+  Tradeable: true
+  TradeTypes:
+  - JUNGLE_COMMON
+  On_Mob_Spawn_Equipment: true
+  On_Traded_Equipment: true
+  On_Random_Loot: true
+  Discoverable: true

@@ -1,0 +1,25 @@
+Definition:
+  DisplayName: <c:#279CF5>地狱火投掷</c>
+  Description:
+  - <gray>投掷出的三叉戟将点燃敌人，持续 %time% 秒。</gray>
+  Weight: 10
+  MaxLevel: 3
+  MinCost:
+    Base: 4
+    Per_Level: 17
+  MaxCost:
+    Base: 7
+    Per_Level: 17
+  AnvilCost: 4
+  SupportedItems: trident
+  PrimaryItems: trident
+  Exclusives: []
+Distribution:
+  Treasure: false
+  Tradeable: true
+  TradeTypes:
+  - SAVANNA_COMMON
+  On_Mob_Spawn_Equipment: true
+  On_Traded_Equipment: true
+  On_Random_Loot: true
+  Discoverable: true

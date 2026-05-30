@@ -1,0 +1,26 @@
+Definition:
+  DisplayName: <c:#279CF5>弹力</c>
+  Description:
+  - <gray>落地时产生类似史莱姆方块的效果。</gray>
+  Weight: 2
+  MaxLevel: 1
+  MinCost:
+    Base: 0
+    Per_Level: 51
+  MaxCost:
+    Base: 51
+    Per_Level: 51
+  AnvilCost: 4
+  SupportedItems: boots
+  PrimaryItems: boots
+  Exclusives:
+  - minecraft:feather_falling
+Distribution:
+  Treasure: true
+  Tradeable: true
+  TradeTypes:
+  - SWAMP_COMMON
+  On_Mob_Spawn_Equipment: false
+  On_Traded_Equipment: false
+  On_Random_Loot: true
+  Discoverable: false

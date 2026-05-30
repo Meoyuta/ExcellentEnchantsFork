@@ -1,0 +1,25 @@
+Definition:
+  DisplayName: <c:#279CF5>轻盈</c>
+  Description:
+  - <gray>可以安全地踩在海龟蛋、耕地和大型垂滴叶上。</gray>
+  Weight: 10
+  MaxLevel: 1
+  MinCost:
+    Base: 2
+    Per_Level: 62
+  MaxCost:
+    Base: 62
+    Per_Level: 62
+  AnvilCost: 1
+  SupportedItems: boots
+  PrimaryItems: boots
+  Exclusives: []
+Distribution:
+  Treasure: false
+  Tradeable: true
+  TradeTypes:
+  - SNOW_COMMON
+  On_Mob_Spawn_Equipment: true
+  On_Traded_Equipment: true
+  On_Random_Loot: true
+  Discoverable: true

@@ -1,0 +1,25 @@
+Definition:
+  DisplayName: <c:#279CF5>双重打击</c>
+  Description:
+  - <gray>%enchantment_trigger_chance%% 几率造成双倍伤害。</gray>
+  Weight: 1
+  MaxLevel: 2
+  MinCost:
+    Base: 2
+    Per_Level: 32
+  MaxCost:
+    Base: 8
+    Per_Level: 32
+  AnvilCost: 6
+  SupportedItems: swords_axes
+  PrimaryItems: sword
+  Exclusives: []
+Distribution:
+  Treasure: false
+  Tradeable: true
+  TradeTypes:
+  - TAIGA_COMMON
+  On_Mob_Spawn_Equipment: true
+  On_Traded_Equipment: true
+  On_Random_Loot: true
+  Discoverable: true

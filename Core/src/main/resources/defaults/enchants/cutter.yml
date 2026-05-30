@@ -1,0 +1,25 @@
+Definition:
+  DisplayName: <c:#279CF5>破甲</c>
+  Description:
+  - <gray>%enchantment_trigger_chance%% 几率击飞敌人盔甲并对其造成 %damage%% 耐久度损失。</gray>
+  Weight: 2
+  MaxLevel: 3
+  MinCost:
+    Base: 1
+    Per_Level: 19
+  MaxCost:
+    Base: 5
+    Per_Level: 19
+  AnvilCost: 7
+  SupportedItems: swords_axes
+  PrimaryItems: sword
+  Exclusives: []
+Distribution:
+  Treasure: false
+  Tradeable: true
+  TradeTypes:
+  - PLAINS_COMMON
+  On_Mob_Spawn_Equipment: true
+  On_Traded_Equipment: true
+  On_Random_Loot: true
+  Discoverable: true

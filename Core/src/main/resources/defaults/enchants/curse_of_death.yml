@@ -1,0 +1,25 @@
+Definition:
+  DisplayName: <c:#279CF5>死亡诅咒</c>
+  Description:
+  - <gray>杀死玩家时，你也有几率死亡。</gray>
+  Weight: 2
+  MaxLevel: 3
+  MinCost:
+    Base: 0
+    Per_Level: 15
+  MaxCost:
+    Base: 5
+    Per_Level: 15
+  AnvilCost: 1
+  SupportedItems: swords_axes
+  PrimaryItems: sword
+  Exclusives: []
+Distribution:
+  Treasure: true
+  Tradeable: true
+  TradeTypes:
+  - DESERT_SPECIAL
+  On_Mob_Spawn_Equipment: false
+  On_Traded_Equipment: false
+  On_Random_Loot: true
+  Discoverable: false

@@ -1,0 +1,30 @@
+Definition:
+  DisplayName: <c:#279CF5>恶灵矢</c>
+  Description:
+  - <gray>发射火球而非箭矢。</gray>
+  Weight: 1
+  MaxLevel: 1
+  MinCost:
+    Base: 0
+    Per_Level: 47
+  MaxCost:
+    Base: 47
+    Per_Level: 47
+  AnvilCost: 7
+  SupportedItems: bow_crossbow
+  PrimaryItems: bow_crossbow
+  Exclusives:
+  - minecraft:power
+  - excellentenchants:ender_bow
+  - minecraft:flame
+  - excellentenchants:bomber
+  - minecraft:punch
+Distribution:
+  Treasure: true
+  Tradeable: true
+  TradeTypes:
+  - DESERT_COMMON
+  On_Mob_Spawn_Equipment: false
+  On_Traded_Equipment: false
+  On_Random_Loot: true
+  Discoverable: false

@@ -200,6 +200,7 @@ public class EnchantListener extends AbstractListener<EnchantsPlugin> {
             if (source.getDamageType() == DamageType.THORNS) return;
 
             this.manager.handleInSlot(damager, EquipmentSlot.HAND, EnchantRegistry.ATTACK, (item, enchant, level) -> enchant.onAttack(event, damager, victim, item, level));
+            this.manager.handleInSlot(damager, EquipmentSlot.CHEST, EnchantRegistry.ATTACK, (item, enchant, level) -> enchant.onAttack(event, damager, victim, item, level));
         }
 
         if (source.getCausingEntity() instanceof LivingEntity damager) {

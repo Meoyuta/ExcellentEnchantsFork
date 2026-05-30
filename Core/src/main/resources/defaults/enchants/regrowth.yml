@@ -1,0 +1,25 @@
+Definition:
+  DisplayName: <c:#279CF5>再生</c>
+  Description:
+  - <gray>每隔几秒恢复 %amount%❤ 生命值。</gray>
+  Weight: 2
+  MaxLevel: 4
+  MinCost:
+    Base: 0
+    Per_Level: 13
+  MaxCost:
+    Base: 6
+    Per_Level: 13
+  AnvilCost: 3
+  SupportedItems: chestplate_elytra
+  PrimaryItems: chestplate
+  Exclusives: []
+Distribution:
+  Treasure: true
+  Tradeable: true
+  TradeTypes:
+  - JUNGLE_SPECIAL
+  On_Mob_Spawn_Equipment: false
+  On_Traded_Equipment: false
+  On_Random_Loot: true
+  Discoverable: false

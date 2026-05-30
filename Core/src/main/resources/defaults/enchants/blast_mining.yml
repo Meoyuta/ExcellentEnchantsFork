@@ -1,0 +1,25 @@
+Definition:
+  DisplayName: <c:#279CF5>爆破开采</c>
+  Description:
+  - <gray>%enchantment_trigger_chance%% 几率产生爆炸开采范围内的所有方块。</gray>
+  Weight: 2
+  MaxLevel: 5
+  MinCost:
+    Base: 4
+    Per_Level: 12
+  MaxCost:
+    Base: 10
+    Per_Level: 12
+  AnvilCost: 3
+  SupportedItems: pickaxe
+  PrimaryItems: pickaxe
+  Exclusives: []
+Distribution:
+  Treasure: false
+  Tradeable: true
+  TradeTypes:
+  - PLAINS_COMMON
+  On_Mob_Spawn_Equipment: true
+  On_Traded_Equipment: true
+  On_Random_Loot: true
+  Discoverable: true

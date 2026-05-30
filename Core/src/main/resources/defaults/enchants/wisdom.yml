@@ -1,0 +1,25 @@
+Definition:
+  DisplayName: <c:#279CF5>经验猎手</c>
+  Description:
+  - <gray>生物掉落 x%modifier% 更多经验。</gray>
+  Weight: 5
+  MaxLevel: 5
+  MinCost:
+    Base: 0
+    Per_Level: 10
+  MaxCost:
+    Base: 3
+    Per_Level: 10
+  AnvilCost: 1
+  SupportedItems: swords_axes
+  PrimaryItems: sword
+  Exclusives: []
+Distribution:
+  Treasure: false
+  Tradeable: true
+  TradeTypes:
+  - DESERT_COMMON
+  On_Mob_Spawn_Equipment: true
+  On_Traded_Equipment: true
+  On_Random_Loot: true
+  Discoverable: true

@@ -1,0 +1,25 @@
+Definition:
+  DisplayName: <c:#279CF5>矿工狂热</c>
+  Description:
+  - <gray>破坏方块时有几率获得 %enchantment_potion_type% %enchantment_potion_level% 效果。</gray>
+  Weight: 2
+  MaxLevel: 3
+  MinCost:
+    Base: 2
+    Per_Level: 18
+  MaxCost:
+    Base: 8
+    Per_Level: 18
+  AnvilCost: 7
+  SupportedItems: tool
+  PrimaryItems: mining_tools
+  Exclusives: []
+Distribution:
+  Treasure: false
+  Tradeable: true
+  TradeTypes:
+  - SAVANNA_COMMON
+  On_Mob_Spawn_Equipment: true
+  On_Traded_Equipment: true
+  On_Random_Loot: true
+  Discoverable: true

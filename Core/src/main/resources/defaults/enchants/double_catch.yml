@@ -1,0 +1,25 @@
+Definition:
+  DisplayName: <c:#279CF5>双重渔获</c>
+  Description:
+  - <gray>有 %enchantment_trigger_chance%% 几率使钓上物品数量增加 x2。</gray>
+  Weight: 2
+  MaxLevel: 3
+  MinCost:
+    Base: 1
+    Per_Level: 16
+  MaxCost:
+    Base: 5
+    Per_Level: 16
+  AnvilCost: 2
+  SupportedItems: fishing_rod
+  PrimaryItems: fishing_rod
+  Exclusives: []
+Distribution:
+  Treasure: false
+  Tradeable: true
+  TradeTypes:
+  - PLAINS_COMMON
+  On_Mob_Spawn_Equipment: true
+  On_Traded_Equipment: true
+  On_Random_Loot: true
+  Discoverable: true

@@ -1,0 +1,25 @@
+Definition:
+  DisplayName: <c:#279CF5>渔夫之炊</c>
+  Description:
+  - <gray>如果钓到的是生鱼，则自动烹饪。</gray>
+  Weight: 2
+  MaxLevel: 1
+  MinCost:
+    Base: 0
+    Per_Level: 51
+  MaxCost:
+    Base: 51
+    Per_Level: 51
+  AnvilCost: 4
+  SupportedItems: fishing_rod
+  PrimaryItems: fishing_rod
+  Exclusives: []
+Distribution:
+  Treasure: true
+  Tradeable: true
+  TradeTypes:
+  - SNOW_SPECIAL
+  On_Mob_Spawn_Equipment: false
+  On_Traded_Equipment: false
+  On_Random_Loot: true
+  Discoverable: false

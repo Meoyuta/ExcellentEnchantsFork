@@ -1,0 +1,25 @@
+Definition:
+  DisplayName: <c:#279CF5>凡化之咒</c>
+  Description:
+  - <gray>%enchantment_trigger_chance%% 几率使掉落物失去附魔。</gray>
+  Weight: 5
+  MaxLevel: 3
+  MinCost:
+    Base: 2
+    Per_Level: 19
+  MaxCost:
+    Base: 6
+    Per_Level: 19
+  AnvilCost: 5
+  SupportedItems: tools_weapons
+  PrimaryItems: weapon
+  Exclusives: []
+Distribution:
+  Treasure: true
+  Tradeable: true
+  TradeTypes:
+  - SNOW_COMMON
+  On_Mob_Spawn_Equipment: false
+  On_Traded_Equipment: false
+  On_Random_Loot: true
+  Discoverable: false

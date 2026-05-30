@@ -1,0 +1,29 @@
+Definition:
+  DisplayName: <c:#279CF5>末影矢</c>
+  Description:
+  - <gray>发射末影珍珠而非箭矢。</gray>
+  Weight: 1
+  MaxLevel: 1
+  MinCost:
+    Base: 2
+    Per_Level: 56
+  MaxCost:
+    Base: 56
+    Per_Level: 56
+  AnvilCost: 6
+  SupportedItems: bow
+  PrimaryItems: bow
+  Exclusives:
+  - minecraft:power
+  - minecraft:flame
+  - excellentenchants:bomber
+  - minecraft:punch
+Distribution:
+  Treasure: true
+  Tradeable: true
+  TradeTypes:
+  - PLAINS_SPECIAL
+  On_Mob_Spawn_Equipment: false
+  On_Traded_Equipment: false
+  On_Random_Loot: true
+  Discoverable: false

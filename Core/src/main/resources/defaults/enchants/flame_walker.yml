@@ -1,0 +1,26 @@
+Definition:
+  DisplayName: <c:#279CF5>烈焰行者</c>
+  Description:
+  - <gray>类似原版冰霜行者，走过岩浆时制造岩浆块，并免疫踩踏岩浆块的伤害。</gray>
+  Weight: 1
+  MaxLevel: 2
+  MinCost:
+    Base: 3
+    Per_Level: 26
+  MaxCost:
+    Base: 8
+    Per_Level: 26
+  AnvilCost: 4
+  SupportedItems: boots
+  PrimaryItems: boots
+  Exclusives:
+  - minecraft:frost_walker
+Distribution:
+  Treasure: true
+  Tradeable: true
+  TradeTypes:
+  - DESERT_SPECIAL
+  On_Mob_Spawn_Equipment: false
+  On_Traded_Equipment: false
+  On_Random_Loot: true
+  Discoverable: false

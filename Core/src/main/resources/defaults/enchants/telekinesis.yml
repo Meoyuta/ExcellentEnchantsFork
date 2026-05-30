@@ -1,0 +1,25 @@
+Definition:
+  DisplayName: <c:#279CF5>意念拾取</c>
+  Description:
+  - <gray>将所有方块掉落物直接移至你的物品栏。</gray>
+  Weight: 1
+  MaxLevel: 1
+  MinCost:
+    Base: 0
+    Per_Level: 53
+  MaxCost:
+    Base: 53
+    Per_Level: 53
+  AnvilCost: 5
+  SupportedItems: tool
+  PrimaryItems: mining_tools
+  Exclusives: []
+Distribution:
+  Treasure: true
+  Tradeable: true
+  TradeTypes:
+  - DESERT_SPECIAL
+  On_Mob_Spawn_Equipment: false
+  On_Traded_Equipment: false
+  On_Random_Loot: true
+  Discoverable: false

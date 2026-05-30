@@ -1,0 +1,25 @@
+Definition:
+  DisplayName: <c:#279CF5>绝境反击</c>
+  Description:
+  - <gray>每失去 %radius%❤ 生命值，造成的伤害增加 %amount%%。</gray>
+  Weight: 1
+  MaxLevel: 5
+  MinCost:
+    Base: 2
+    Per_Level: 11
+  MaxCost:
+    Base: 7
+    Per_Level: 11
+  AnvilCost: 2
+  SupportedItems: swords_axes
+  PrimaryItems: sword
+  Exclusives: []
+Distribution:
+  Treasure: false
+  Tradeable: true
+  TradeTypes:
+  - TAIGA_COMMON
+  On_Mob_Spawn_Equipment: true
+  On_Traded_Equipment: true
+  On_Random_Loot: true
+  Discoverable: true

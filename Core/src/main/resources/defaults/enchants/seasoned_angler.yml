@@ -1,0 +1,25 @@
+Definition:
+  DisplayName: <c:#279CF5>老练钓手</c>
+  Description:
+  - <gray>从钓鱼中获得的经验增加 %amount%%。</gray>
+  Weight: 5
+  MaxLevel: 3
+  MinCost:
+    Base: 2
+    Per_Level: 20
+  MaxCost:
+    Base: 5
+    Per_Level: 20
+  AnvilCost: 1
+  SupportedItems: fishing_rod
+  PrimaryItems: fishing_rod
+  Exclusives: []
+Distribution:
+  Treasure: false
+  Tradeable: true
+  TradeTypes:
+  - PLAINS_COMMON
+  On_Mob_Spawn_Equipment: true
+  On_Traded_Equipment: true
+  On_Random_Loot: true
+  Discoverable: true

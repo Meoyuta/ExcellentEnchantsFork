@@ -1,0 +1,28 @@
+Definition:
+  DisplayName: <c:#279CF5>自动熔炼</c>
+  Description:
+  - <gray>%enchantment_trigger_chance%% 几率将掉落物熔炼成其他材料。</gray>
+  Weight: 5
+  MaxLevel: 5
+  MinCost:
+    Base: 3
+    Per_Level: 9
+  MaxCost:
+    Base: 8
+    Per_Level: 9
+  AnvilCost: 1
+  SupportedItems: tool
+  PrimaryItems: mining_tools
+  Exclusives:
+  - minecraft:silk_touch
+  - excellentenchants:silk_chest
+  - excellentenchants:silk_spawner
+Distribution:
+  Treasure: false
+  Tradeable: true
+  TradeTypes:
+  - DESERT_COMMON
+  On_Mob_Spawn_Equipment: true
+  On_Traded_Equipment: true
+  On_Random_Loot: true
+  Discoverable: true

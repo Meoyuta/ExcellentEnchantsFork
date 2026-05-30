@@ -1,0 +1,25 @@
+Definition:
+  DisplayName: <c:#279CF5>神圣之触</c>
+  Description:
+  - <gray>%enchantment_trigger_chance%% 几率挖掘刷怪笼并保留其生物类型。</gray>
+  Weight: 1
+  MaxLevel: 1
+  MinCost:
+    Base: 2
+    Per_Level: 46
+  MaxCost:
+    Base: 46
+    Per_Level: 46
+  AnvilCost: 3
+  SupportedItems: mining_tools
+  PrimaryItems: pickaxe
+  Exclusives: []
+Distribution:
+  Treasure: true
+  Tradeable: true
+  TradeTypes:
+  - JUNGLE_SPECIAL
+  On_Mob_Spawn_Equipment: false
+  On_Traded_Equipment: false
+  On_Random_Loot: true
+  Discoverable: false

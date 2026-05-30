@@ -1,0 +1,25 @@
+Definition:
+  DisplayName: <c:#279CF5>幸运矿工</c>
+  Description:
+  - <gray>%enchantment_trigger_chance%% 几率从矿石中获得额外 %amount%% 经验。</gray>
+  Weight: 5
+  MaxLevel: 3
+  MinCost:
+    Base: 4
+    Per_Level: 16
+  MaxCost:
+    Base: 8
+    Per_Level: 16
+  AnvilCost: 2
+  SupportedItems: pickaxe
+  PrimaryItems: pickaxe
+  Exclusives: []
+Distribution:
+  Treasure: false
+  Tradeable: true
+  TradeTypes:
+  - JUNGLE_COMMON
+  On_Mob_Spawn_Equipment: true
+  On_Traded_Equipment: true
+  On_Random_Loot: true
+  Discoverable: true

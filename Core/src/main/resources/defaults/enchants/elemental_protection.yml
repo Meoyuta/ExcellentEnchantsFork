@@ -1,0 +1,25 @@
+Definition:
+  DisplayName: <c:#279CF5>元素庇护</c>
+  Description:
+  - <gray>减少 %amount%% 毒素、魔法、凋零、闪电、冰冻伤害。</gray>
+  Weight: 10
+  MaxLevel: 4
+  MinCost:
+    Base: 4
+    Per_Level: 12
+  MaxCost:
+    Base: 7
+    Per_Level: 12
+  AnvilCost: 0
+  SupportedItems: armor
+  PrimaryItems: armor
+  Exclusives: []
+Distribution:
+  Treasure: false
+  Tradeable: true
+  TradeTypes:
+  - SWAMP_COMMON
+  On_Mob_Spawn_Equipment: true
+  On_Traded_Equipment: true
+  On_Random_Loot: true
+  Discoverable: true

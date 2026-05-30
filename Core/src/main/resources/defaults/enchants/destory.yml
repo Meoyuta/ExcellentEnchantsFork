@@ -1,0 +1,25 @@
+Definition:
+  DisplayName: '<#279CF5>毁灭</#279CF5>'
+  Description:
+    - '<gray>基础增伤 %amount%，按最大生命值与当前生命值的比值提高。</gray>'
+  Weight: 1
+  MaxLevel: 5
+  MinCost:
+    Base: 5
+    Per_Level: 8
+  MaxCost:
+    Base: 25
+    Per_Level: 8
+  AnvilCost: 5
+  SupportedItems: chestplate
+  PrimaryItems: chestplate
+  Exclusives: []
+Distribution:
+  Treasure: false
+  Tradeable: true
+  TradeTypes:
+    - DESERT_SPECIAL
+  On_Mob_Spawn_Equipment: true
+  On_Traded_Equipment: true
+  On_Random_Loot: true
+  Discoverable: true

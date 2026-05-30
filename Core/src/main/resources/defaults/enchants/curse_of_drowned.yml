@@ -1,0 +1,25 @@
+Definition:
+  DisplayName: <c:#279CF5>溺亡诅咒</c>
+  Description:
+  - <gray>%enchantment_trigger_chance%% 几率钓上溺尸。</gray>
+  Weight: 5
+  MaxLevel: 3
+  MinCost:
+    Base: 0
+    Per_Level: 19
+  MaxCost:
+    Base: 3
+    Per_Level: 19
+  AnvilCost: 4
+  SupportedItems: fishing_rod
+  PrimaryItems: fishing_rod
+  Exclusives: []
+Distribution:
+  Treasure: true
+  Tradeable: true
+  TradeTypes:
+  - SWAMP_COMMON
+  On_Mob_Spawn_Equipment: false
+  On_Traded_Equipment: false
+  On_Random_Loot: true
+  Discoverable: false

@@ -1,0 +1,25 @@
+Definition:
+  DisplayName: <c:#279CF5>稳固</c>
+  Description:
+  - <gray>受到伤害时有 %enchantment_trigger_chance%% 几率减少 %amount%% 击退。</gray>
+  Weight: 5
+  MaxLevel: 3
+  MinCost:
+    Base: 2
+    Per_Level: 20
+  MaxCost:
+    Base: 8
+    Per_Level: 20
+  AnvilCost: 0
+  SupportedItems: leggings
+  PrimaryItems: leggings
+  Exclusives: []
+Distribution:
+  Treasure: false
+  Tradeable: true
+  TradeTypes:
+  - PLAINS_COMMON
+  On_Mob_Spawn_Equipment: true
+  On_Traded_Equipment: true
+  On_Random_Loot: true
+  Discoverable: true

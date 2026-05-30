@@ -1,0 +1,25 @@
+Definition:
+  DisplayName: <c:#279CF5>狙击</c>
+  Description:
+  - <gray>增加箭矢飞行速度 %amount%%。</gray>
+  Weight: 10
+  MaxLevel: 2
+  MinCost:
+    Base: 1
+    Per_Level: 26
+  MaxCost:
+    Base: 5
+    Per_Level: 26
+  AnvilCost: 2
+  SupportedItems: bow_crossbow
+  PrimaryItems: bow_crossbow
+  Exclusives: []
+Distribution:
+  Treasure: false
+  Tradeable: true
+  TradeTypes:
+  - PLAINS_SPECIAL
+  On_Mob_Spawn_Equipment: true
+  On_Traded_Equipment: true
+  On_Random_Loot: true
+  Discoverable: true

@@ -1,0 +1,25 @@
+Definition:
+  DisplayName: <c:#279CF5>乾坤袋</c>
+  Description:
+  - <gray>破坏箱子时有几率将其所有内容物保存在掉落物中。</gray>
+  Weight: 1
+  MaxLevel: 1
+  MinCost:
+    Base: 2
+    Per_Level: 52
+  MaxCost:
+    Base: 52
+    Per_Level: 52
+  AnvilCost: 5
+  SupportedItems: mining_tools
+  PrimaryItems: axe
+  Exclusives: []
+Distribution:
+  Treasure: false
+  Tradeable: true
+  TradeTypes:
+  - SAVANNA_COMMON
+  On_Mob_Spawn_Equipment: true
+  On_Traded_Equipment: true
+  On_Random_Loot: true
+  Discoverable: true

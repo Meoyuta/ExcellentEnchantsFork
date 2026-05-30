@@ -1,0 +1,28 @@
+Definition:
+  DisplayName: <c:#279CF5>滞留药箭</c>
+  Description:
+  - <gray>%enchantment_trigger_chance%% 几率使药箭在击中方块时产生滞留效果云。</gray>
+  Weight: 2
+  MaxLevel: 3
+  MinCost:
+    Base: 0
+    Per_Level: 21
+  MaxCost:
+    Base: 6
+    Per_Level: 21
+  AnvilCost: 6
+  SupportedItems: bow_crossbow
+  PrimaryItems: bow_crossbow
+  Exclusives:
+  - excellentenchants:ender_bow
+  - excellentenchants:bomber
+  - excellentenchants:ghast
+Distribution:
+  Treasure: false
+  Tradeable: true
+  TradeTypes:
+  - SAVANNA_COMMON
+  On_Mob_Spawn_Equipment: true
+  On_Traded_Equipment: true
+  On_Random_Loot: true
+  Discoverable: true

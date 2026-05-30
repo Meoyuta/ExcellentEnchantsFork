@@ -1,0 +1,27 @@
+Definition:
+  DisplayName: <c:#279CF5>连锁采矿</c>
+  Description:
+  - <gray>%enchantment_trigger_chance%% 几率一次性挖掘最多 %amount% 个矿脉相连方块。</gray>
+  Weight: 2
+  MaxLevel: 3
+  MinCost:
+    Base: 4
+    Per_Level: 15
+  MaxCost:
+    Base: 7
+    Per_Level: 15
+  AnvilCost: 6
+  SupportedItems: pickaxe
+  PrimaryItems: pickaxe
+  Exclusives:
+  - excellentenchants:blast_mining
+  - excellentenchants:tunnel
+Distribution:
+  Treasure: false
+  Tradeable: true
+  TradeTypes:
+  - PLAINS_SPECIAL
+  On_Mob_Spawn_Equipment: true
+  On_Traded_Equipment: true
+  On_Random_Loot: true
+  Discoverable: true

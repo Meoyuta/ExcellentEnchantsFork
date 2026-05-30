@@ -1,0 +1,25 @@
+Definition:
+  DisplayName: <c:#279CF5>自动播种</c>
+  Description:
+  - <gray>收获或右键点击作物时自动补种。</gray>
+  Weight: 1
+  MaxLevel: 1
+  MinCost:
+    Base: 2
+    Per_Level: 48
+  MaxCost:
+    Base: 48
+    Per_Level: 48
+  AnvilCost: 1
+  SupportedItems: hoe
+  PrimaryItems: hoe
+  Exclusives: []
+Distribution:
+  Treasure: false
+  Tradeable: true
+  TradeTypes:
+  - PLAINS_COMMON
+  On_Mob_Spawn_Equipment: true
+  On_Traded_Equipment: true
+  On_Random_Loot: true
+  Discoverable: true

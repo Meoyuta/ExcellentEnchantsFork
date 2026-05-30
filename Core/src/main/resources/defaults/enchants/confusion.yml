@@ -1,0 +1,25 @@
+Definition:
+  DisplayName: <c:#279CF5>混乱</c>
+  Description:
+  - <gray>%enchantment_trigger_chance%% 几率在攻击时施加 %enchantment_potion_type% %enchantment_potion_level% (%enchantment_potion_duration%秒)。</gray>
+  Weight: 10
+  MaxLevel: 2
+  MinCost:
+    Base: 1
+    Per_Level: 29
+  MaxCost:
+    Base: 5
+    Per_Level: 29
+  AnvilCost: 0
+  SupportedItems: swords_axes
+  PrimaryItems: sword
+  Exclusives: []
+Distribution:
+  Treasure: false
+  Tradeable: true
+  TradeTypes:
+  - SNOW_COMMON
+  On_Mob_Spawn_Equipment: true
+  On_Traded_Equipment: true
+  On_Random_Loot: true
+  Discoverable: true

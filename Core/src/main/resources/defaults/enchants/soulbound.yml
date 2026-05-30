@@ -1,0 +1,26 @@
+Definition:
+  DisplayName: <c:#279CF5>灵魂绑定</c>
+  Description:
+  - <gray>死亡时阻止物品掉落。</gray>
+  Weight: 2
+  MaxLevel: 1
+  MinCost:
+    Base: 2
+    Per_Level: 62
+  MaxCost:
+    Base: 62
+    Per_Level: 62
+  AnvilCost: 7
+  SupportedItems: breakable
+  PrimaryItems: breakable
+  Exclusives:
+  - minecraft:vanishing_curse
+Distribution:
+  Treasure: true
+  Tradeable: true
+  TradeTypes:
+  - DESERT_SPECIAL
+  On_Mob_Spawn_Equipment: false
+  On_Traded_Equipment: false
+  On_Random_Loot: true
+  Discoverable: false

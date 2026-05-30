@@ -1,0 +1,25 @@
+Definition:
+  DisplayName: <c:#279CF5>水下呼吸</c>
+  Description:
+  - <gray>永久获得 %enchantment_potion_type% %enchantment_potion_level% 效果。</gray>
+  Weight: 1
+  MaxLevel: 1
+  MinCost:
+    Base: 2
+    Per_Level: 52
+  MaxCost:
+    Base: 52
+    Per_Level: 52
+  AnvilCost: 3
+  SupportedItems: helmet
+  PrimaryItems: helmet
+  Exclusives: []
+Distribution:
+  Treasure: true
+  Tradeable: true
+  TradeTypes:
+  - PLAINS_SPECIAL
+  On_Mob_Spawn_Equipment: false
+  On_Traded_Equipment: false
+  On_Random_Loot: true
+  Discoverable: false

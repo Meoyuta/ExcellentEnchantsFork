@@ -1,0 +1,25 @@
+Definition:
+  DisplayName: <c:#279CF5>脆弱诅咒</c>
+  Description:
+  - <gray>阻止物品被砂轮或铁砧修复/附魔。</gray>
+  Weight: 10
+  MaxLevel: 1
+  MinCost:
+    Base: 4
+    Per_Level: 51
+  MaxCost:
+    Base: 51
+    Per_Level: 51
+  AnvilCost: 7
+  SupportedItems: breakable
+  PrimaryItems: breakable
+  Exclusives: []
+Distribution:
+  Treasure: true
+  Tradeable: true
+  TradeTypes:
+  - TAIGA_COMMON
+  On_Mob_Spawn_Equipment: false
+  On_Traded_Equipment: false
+  On_Random_Loot: true
+  Discoverable: false

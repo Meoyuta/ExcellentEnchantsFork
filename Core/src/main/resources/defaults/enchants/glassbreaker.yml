@@ -1,0 +1,25 @@
+Definition:
+  DisplayName: <c:#279CF5>破璃</c>
+  Description:
+  - <gray>瞬间破坏玻璃方块。</gray>
+  Weight: 10
+  MaxLevel: 1
+  MinCost:
+    Base: 4
+    Per_Level: 51
+  MaxCost:
+    Base: 51
+    Per_Level: 51
+  AnvilCost: 1
+  SupportedItems: tool
+  PrimaryItems: mining_tools
+  Exclusives: []
+Distribution:
+  Treasure: false
+  Tradeable: true
+  TradeTypes:
+  - DESERT_COMMON
+  On_Mob_Spawn_Equipment: true
+  On_Traded_Equipment: true
+  On_Random_Loot: true
+  Discoverable: true

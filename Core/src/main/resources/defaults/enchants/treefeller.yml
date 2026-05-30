@@ -1,0 +1,25 @@
+Definition:
+  DisplayName: <c:#279CF5>伐木</c>
+  Description:
+  - <gray>砍伐整棵树。</gray>
+  Weight: 2
+  MaxLevel: 1
+  MinCost:
+    Base: 4
+    Per_Level: 46
+  MaxCost:
+    Base: 46
+    Per_Level: 46
+  AnvilCost: 7
+  SupportedItems: axe
+  PrimaryItems: axe
+  Exclusives: []
+Distribution:
+  Treasure: false
+  Tradeable: true
+  TradeTypes:
+  - TAIGA_SPECIAL
+  On_Mob_Spawn_Equipment: true
+  On_Traded_Equipment: true
+  On_Random_Loot: true
+  Discoverable: true

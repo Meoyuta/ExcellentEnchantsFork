@@ -1,0 +1,28 @@
+Definition:
+  DisplayName: <c:#279CF5>吸血之箭</c>
+  Description:
+  - <gray>%enchantment_trigger_chance%% 几率在箭矢击中时恢复 %amount%❤ 生命值。</gray>
+  Weight: 2
+  MaxLevel: 3
+  MinCost:
+    Base: 3
+    Per_Level: 20
+  MaxCost:
+    Base: 8
+    Per_Level: 20
+  AnvilCost: 7
+  SupportedItems: bow_crossbow
+  PrimaryItems: bow_crossbow
+  Exclusives:
+  - excellentenchants:ender_bow
+  - excellentenchants:bomber
+  - excellentenchants:ghast
+Distribution:
+  Treasure: false
+  Tradeable: true
+  TradeTypes:
+  - SWAMP_SPECIAL
+  On_Mob_Spawn_Equipment: true
+  On_Traded_Equipment: true
+  On_Random_Loot: true
+  Discoverable: true

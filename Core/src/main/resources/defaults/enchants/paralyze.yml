@@ -1,0 +1,25 @@
+Definition:
+  DisplayName: <c:#279CF5>麻痹</c>
+  Description:
+  - <gray>%enchantment_trigger_chance%% 几率在攻击时施加 %enchantment_potion_type% %enchantment_potion_level% (%enchantment_potion_duration%秒)。</gray>
+  Weight: 5
+  MaxLevel: 5
+  MinCost:
+    Base: 1
+    Per_Level: 11
+  MaxCost:
+    Base: 6
+    Per_Level: 11
+  AnvilCost: 3
+  SupportedItems: swords_axes
+  PrimaryItems: sword
+  Exclusives: []
+Distribution:
+  Treasure: false
+  Tradeable: true
+  TradeTypes:
+  - TAIGA_COMMON
+  On_Mob_Spawn_Equipment: true
+  On_Traded_Equipment: true
+  On_Random_Loot: true
+  Discoverable: true
