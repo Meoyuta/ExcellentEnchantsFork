@@ -5,13 +5,16 @@
     <parent>
         <artifactId>ExcellentEnchants</artifactId>
         <groupId>su.nightexpress.excellentenchants</groupId>
-        <version>5.4.6</version>
+        <version>5.4.3</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>Core</artifactId>
 
     <properties>
+        <maven.compiler.source>25</maven.compiler.source>
+	    <maven.compiler.target>25</maven.compiler.target>
+	    <maven.compiler.release>25</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -40,24 +43,50 @@
         <dependency>
             <groupId>su.nightexpress.excellentenchants</groupId>
             <artifactId>API</artifactId>
-            <version>5.4.6</version>
+            <version>5.4.3</version>
         </dependency>
 
-        <!-- NMS modules loaded at runtime via reflection -->
+        <dependency>
+            <groupId>su.nightexpress.excellentenchants</groupId>
+            <artifactId>spigot-1.21.11</artifactId>
+            <version>5.4.3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>su.nightexpress.excellentenchants</groupId>
+            <artifactId>spigot-26.1.2</artifactId>
+            <version>5.4.3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>su.nightexpress.excellentenchants</groupId>
+            <artifactId>MC_1_21_10</artifactId>
+            <version>5.4.3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>su.nightexpress.excellentenchants</groupId>
+            <artifactId>MC_1_21_8</artifactId>
+            <version>5.4.3</version>
+        </dependency>
 
         <dependency>
             <groupId>su.nightexpress.excellentenchants</groupId>
             <artifactId>tooltip-packetevents</artifactId>
-            <version>5.4.6</version>
+            <version>5.4.3</version>
         </dependency>
 
         <dependency>
             <groupId>su.nightexpress.excellentenchants</groupId>
             <artifactId>tooltip-protocollib</artifactId>
-            <version>5.4.6</version>
+            <version>5.4.3</version>
         </dependency>
 
-        <!-- compat-mythicmobs: optional, depends on slow external repo -->
+        <dependency>
+            <groupId>su.nightexpress.excellentenchants</groupId>
+            <artifactId>compat-mythicmobs</artifactId>
+            <version>5.4.3</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -103,12 +132,12 @@
                     <dependency>
                         <groupId>org.ow2.asm</groupId>
                         <artifactId>asm</artifactId>
-                        <version>9.8</version>
+                        <version>9.2</version>
                     </dependency>
                     <dependency>
                         <groupId>org.ow2.asm</groupId>
                         <artifactId>asm-commons</artifactId>
-                        <version>9.8</version>
+                        <version>9.2</version>
                     </dependency>
                 </dependencies>
                 <executions>
@@ -118,7 +147,7 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
-                            <outputFile>${maven.multiModuleProjectDirectory}/target/${project.parent.artifactId}-${project.version}.jar</outputFile>
+                            <outputFile>${project.parent.basedir}\target\${project.parent.name}-${project.version}.jar</outputFile>
                             <artifactSet>
                                 <includes>
                                     <include>su.nightexpress.excellentenchants*</include>
