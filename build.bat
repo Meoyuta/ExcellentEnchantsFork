@@ -13,7 +13,7 @@ if not defined EE_BUILD_LOGGING (
 
 cd /d "%~dp0"
 
-set "MAVEN_OPTS=-Dfile.encoding=UTF-8"
+set "MAVEN_OPTS=-T 8 -Dfile.encoding=UTF-8"
 set "JAVA_HOME=D:\java\jdk-25"
 set "PATH=%JAVA_HOME%\bin;%PATH%"
 
