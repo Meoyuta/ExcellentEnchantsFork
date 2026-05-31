@@ -55,12 +55,13 @@ java -version
 echo.
 
 echo [INFO] Cleaning previous build...
-call mvn clean %*
+REM Added -T 8 for parallel execution
+call mvn clean -T 8 %*
 if %ERRORLEVEL% neq 0 goto :fail
 echo.
 
 echo [INFO] Building ExcellentEnchants...
-call mvn package -DskipTests %*
+call mvn package -DskipTests -T 8 %*
 if %ERRORLEVEL% neq 0 goto :fail
 
 echo.

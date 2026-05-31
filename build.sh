@@ -50,11 +50,11 @@ java -version
 echo
 
 echo "[INFO] Cleaning previous build..."
-mvn clean "$@"
+mvn clean "$@" -T 8
 echo
 
 echo "[INFO] Building ExcellentEnchants..."
-mvn package -DskipTests "$@"
+mvn package -DskipTests "$@" -T 8
 echo
 
 echo "[OK] Build complete!"

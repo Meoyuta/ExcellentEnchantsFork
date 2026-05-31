@@ -28,7 +28,7 @@ jobs:
           java-version: '25'
           cache: maven
 
-      - name: Build
+      - name: Build with script
         run: bash build.sh
 
       - name: Upload artifacts
