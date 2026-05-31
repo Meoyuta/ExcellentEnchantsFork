@@ -51,7 +51,7 @@ public class EnchantsMenu extends NormalMenu<EnchantsPlugin> implements ConfigBa
     private int[]        enchantSlots;
 
     public EnchantsMenu(@NotNull EnchantsPlugin plugin) {
-        super(plugin, MenuType.GENERIC_9X4, BLACK.wrap("Custom Enchantments"));
+        super(plugin, MenuType.GENERIC_9X6, BLACK.wrap("Custom Enchantments"));
         this.levelKey = new NamespacedKey(plugin, "list_display_level");
 
         this.load(FileConfig.loadOrExtract(plugin, EnchantsFiles.DIR_MENU, FILE_NAME));
@@ -163,11 +163,11 @@ public class EnchantsMenu extends NormalMenu<EnchantsPlugin> implements ConfigBa
                 LIGHT_YELLOW.wrap("▪ " + LIGHT_GRAY.wrap("Charges: ") + GENERIC_AMOUNT + "⚡" + LIGHT_GRAY.wrap(" (" + WHITE.wrap(GENERIC_ITEM) + ")"))
             )).read(config);
 
-        this.enchantSlots = ConfigValue.create("Enchantment.Slots", IntStream.range(0, 27).toArray()).read(config);
+        this.enchantSlots = ConfigValue.create("Enchantment.Slots", IntStream.range(0, 45).toArray()).read(config);
 
 
-        loader.addDefaultItem(MenuItem.buildNextPage(this, 35));
-        loader.addDefaultItem(MenuItem.buildPreviousPage(this, 27));
+        loader.addDefaultItem(MenuItem.buildNextPage(this, 53));
+        loader.addDefaultItem(MenuItem.buildPreviousPage(this, 45));
     }
 }
 

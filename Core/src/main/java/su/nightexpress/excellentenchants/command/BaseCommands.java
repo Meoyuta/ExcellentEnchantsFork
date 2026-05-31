@@ -86,13 +86,6 @@ public class BaseCommands {
             .executes(this::disenchantItem)
         );
 
-        builder.branch(Commands.literal("info")
-            .description(Lang.COMMAND_INFO_DESC)
-            .permission(Perms.COMMAND_INFO)
-            .withArguments(CommandArguments.customEnchantArgument(CommandArguments.ENCHANT))
-            .executes(this::showEnchantInfo)
-        );
-
         builder.branch(Commands.literal("list")
             .playerOnly()
             .description(Lang.COMMAND_LIST_DESC)
@@ -231,18 +224,6 @@ public class BaseCommands {
             .replace(EnchantsPlaceholders.forPlayer(player))
             .replace(EnchantsPlaceholders.GENERIC_ITEM, ItemUtil.getNameSerialized(itemStack))
             .replace(EnchantsPlaceholders.GENERIC_ENCHANT, LangUtil.getSerializedName(enchantment))
-        );
-
-        return true;
-    }
-
-    private boolean showEnchantInfo(@NotNull CommandContext context, @NotNull ParsedArguments arguments) {
-        CustomEnchantment enchantment = arguments.get(CommandArguments.ENCHANT, CustomEnchantment.class);
-
-        context.send(Lang.COMMAND_INFO_DONE, replacer -> replacer
-            .replace(EnchantsPlaceholders.ENCHANTMENT_ID, enchantment.getId())
-            .replace(EnchantsPlaceholders.ENCHANTMENT_NAME, enchantment.getDisplayName())
-            .replace(EnchantsPlaceholders.ENCHANTMENT_DESCRIPTION_REPLACED, String.join("\n", enchantment.getDescription(1)))
         );
 
         return true;
