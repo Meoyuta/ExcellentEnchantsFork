@@ -13,7 +13,8 @@ if not defined EE_BUILD_LOGGING (
 
 cd /d "%~dp0"
 
-set "MAVEN_OPTS=-T 8 -Dfile.encoding=UTF-8"
+REM Fixed: -T 8 is a Maven argument, not a JVM option, so removed from MAVEN_OPTS
+set "MAVEN_OPTS=-Dfile.encoding=UTF-8"
 set "JAVA_HOME=D:\java\jdk-25"
 set "PATH=%JAVA_HOME%\bin;%PATH%"
 
@@ -39,12 +40,13 @@ java -version
 echo.
 
 echo [INFO] Cleaning previous build...
-call mvn clean %*
+REM Added -T 8 for parallel execution
+call mvn clean -T 8 %*
 if %ERRORLEVEL% neq 0 goto :fail
 echo.
 
 echo [INFO] Building ExcellentEnchants...
-call mvn package -DskipTests %*
+call mvn package -DskipTests -T 8 %*
 if %ERRORLEVEL% neq 0 goto :fail
 
 echo.

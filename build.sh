@@ -16,7 +16,7 @@ on_exit() {
 }
 trap on_exit EXIT
 
-export MAVEN_OPTS="${MAVEN_OPTS:+$MAVEN_OPTS }-T 8 -Dfile.encoding=UTF-8"
+export MAVEN_OPTS="${MAVEN_OPTS:+$MAVEN_OPTS }-Dfile.encoding=UTF-8"
 
 if [ -z "${JAVA_HOME:-}" ]; then
     for candidate in \
@@ -55,11 +55,11 @@ java -version
 echo
 
 echo "[INFO] Cleaning previous build..."
-mvn clean "$@"
+mvn clean "$@" -T 8
 echo
 
 echo "[INFO] Building ExcellentEnchants..."
-mvn package -DskipTests "$@"
+mvn package -DskipTests "$@" -T 8
 echo
 
 echo "[OK] Build complete!"
