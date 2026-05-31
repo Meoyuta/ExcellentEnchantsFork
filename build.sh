@@ -18,21 +18,11 @@ trap on_exit EXIT
 
 export MAVEN_OPTS="${MAVEN_OPTS:+$MAVEN_OPTS }-Dfile.encoding=UTF-8"
 
-if [ -z "${JAVA_HOME:-}" ]; then
-    for candidate in \
-        "/d/java/jdk-25" \
-        "/d/Java/jdk-25" \
-        "/usr/lib/jvm/jdk-25" \
-        "/usr/lib/jvm/java-25-openjdk" \
-        "/opt/jdk-25"; do
-        if [ -x "$candidate/bin/java" ]; then
-            export JAVA_HOME="$candidate"
-            break
-        fi
-    done
-fi
-
 if [ -n "${JAVA_HOME:-}" ]; then
+    if [ ! -x "$JAVA_HOME/bin/java" ]; then
+        echo "[ERROR] JAVA_HOME is set but java was not found: $JAVA_HOME"
+        exit 1
+    fi
     export PATH="$JAVA_HOME/bin:$PATH"
 fi
 
@@ -46,7 +36,12 @@ if ! command -v mvn >/dev/null 2>&1; then
 fi
 
 if ! command -v java >/dev/null 2>&1; then
-    echo "[ERROR] JDK not found. Please install JDK 25 and add it to PATH or set JAVA_HOME."
+    echo "[ERROR] Java not found. Set JAVA_HOME or add JDK 25 to PATH."
+    exit 1
+fi
+
+if ! command -v javac >/dev/null 2>&1; then
+    echo "[ERROR] javac not found. Set JAVA_HOME or add JDK 25 to PATH."
     exit 1
 fi
 

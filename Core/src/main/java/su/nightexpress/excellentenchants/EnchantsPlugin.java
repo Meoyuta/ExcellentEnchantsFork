@@ -24,7 +24,7 @@ public class EnchantsPlugin extends NightPlugin {
     @Override
     @NotNull
     protected PluginDetails getDefaultDetails() {
-        return PluginDetails.create("Enchants", new String[]{"eenchants", "excellentenchants"})
+        return PluginDetails.create("Enchants", new String[]{"ee", "eenchants", "excellentenchants"})
             .setConfigClass(Config.class)
             .setPermissionsClass(Perms.class);
     }

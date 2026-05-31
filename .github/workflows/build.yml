@@ -36,6 +36,8 @@ jobs:
         with:
           name: ExcellentEnchants-5.4.5
           if-no-files-found: error / 未找到文件时报错
+          name: ExcellentEnchants-5.4.6
+          if-no-files-found: error
           path: |
             target/ExcellentEnchants-*.jar
             Core/target/Core-*.jar
