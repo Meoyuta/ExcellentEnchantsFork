@@ -106,6 +106,7 @@ public enum EnchantCatalog implements EnchantCatalogEntry {
     PARALYZE(ParalyzeEnchant::new),
     RAGE(RageEnchant::new),
     ROCKET(RocketEnchant::new),
+    ROUGHNESS(RoughnessEnchant::new),
     SWIPER(SwiperEnchant::new),
     TEMPER(TemperEnchant::new),
     THRIFTY(ThriftyEnchant::new),

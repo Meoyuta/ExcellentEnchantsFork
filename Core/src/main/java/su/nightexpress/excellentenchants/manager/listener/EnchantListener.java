@@ -19,6 +19,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -31,6 +32,7 @@ import su.nightexpress.excellentenchants.api.enchantment.component.EnchantCompon
 import su.nightexpress.excellentenchants.api.enchantment.type.BlockEnchant;
 import su.nightexpress.excellentenchants.api.enchantment.type.ProtectionEnchant;
 import su.nightexpress.excellentenchants.enchantment.EnchantRegistry;
+import su.nightexpress.excellentenchants.enchantment.weapon.RoughnessEnchant;
 import su.nightexpress.excellentenchants.manager.EnchantManager;
 import su.nightexpress.nightcore.manager.AbstractListener;
 import su.nightexpress.nightcore.util.EntityUtil;
@@ -209,6 +211,27 @@ public class EnchantListener extends AbstractListener<EnchantsPlugin> {
 
             this.manager.handleInSlots(victim, ARMOR_SLOTS, EnchantRegistry.DEFEND, (item, enchant, level) -> enchant.onProtect(event, damager, victim, item, level));
         }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onRoughnessDamage(EntityDamageByEntityEvent event) {
+        if (!(event.getEntity() instanceof LivingEntity)) return;
+
+        DamageSource source = event.getDamageSource();
+        Entity directDamager = source.getDirectEntity();
+        if (!(directDamager instanceof LivingEntity damager)) return;
+        if (source.getDamageType() == DamageType.THORNS) return;
+
+        EntityEquipment equipment = damager.getEquipment();
+        if (equipment == null) return;
+
+        ItemStack weapon = equipment.getItemInMainHand();
+        CustomEnchantment enchantment = EnchantRegistry.getById(RoughnessEnchant.ID);
+        if (!(enchantment instanceof RoughnessEnchant roughness)) return;
+        if (this.manager.getSettings().isEnchantDisabledInWorld(damager.getWorld(), roughness)) return;
+        if (!EnchantsUtils.contains(weapon, roughness.getBukkitEnchantment())) return;
+
+        event.setDamage(RoughnessEnchant.DAMAGE);
     }
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true) // ignoreCancelled for Paper compatibility

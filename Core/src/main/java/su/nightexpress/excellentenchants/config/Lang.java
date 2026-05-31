@@ -19,6 +19,7 @@ public class Lang implements LangContainer {
     public static final TextLocale COMMAND_BOOK_DESC        = LangEntry.builder("Command.Book.Desc").text("Give a book with specific enchantment.");
     public static final TextLocale COMMAND_RANDOM_BOOK_DESC = LangEntry.builder("Command.RandomBook.Desc").text("Give a book with random enchantment.");
     public static final TextLocale COMMAND_GIVE_FUEL_DESC   = LangEntry.builder("Command.GiveFuel.Desc").text("Give enchantment fuel item.");
+    public static final TextLocale COMMAND_INFO_DESC        = LangEntry.builder("Command.Info.Desc").text("Show enchantment name and description by id.");
 
     public static final MessageLocale COMMAND_LIST_DONE_OTHERS = LangEntry.builder("Command.List.DoneOthers").chatMessage(
         GRAY.wrap("Opened enchantments GUI for " + SOFT_YELLOW.wrap(PLAYER_NAME) + ".")
@@ -43,6 +44,13 @@ public class Lang implements LangContainer {
 
     public static final MessageLocale COMMAND_ENCHANT_ERROR_NO_ITEM = LangEntry.builder("Command.Enchant.Error.NoItem").chatMessage(
         SOFT_RED.wrap("There is no item to enchant!")
+    );
+
+    public static final MessageLocale COMMAND_INFO_DONE = LangEntry.builder("Command.Info.Done").chatMessage(
+        GRAY.wrap("ID: " + SOFT_YELLOW.wrap(ENCHANTMENT_ID)),
+        GRAY.wrap("Name: " + SOFT_YELLOW.wrap(ENCHANTMENT_NAME)),
+        GRAY.wrap("Description:"),
+        ENCHANTMENT_DESCRIPTION_REPLACED
     );
 
 

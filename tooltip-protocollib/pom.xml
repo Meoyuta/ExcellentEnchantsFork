@@ -6,7 +6,7 @@
     <parent>
         <groupId>su.nightexpress.excellentenchants</groupId>
         <artifactId>ExcellentEnchants</artifactId>
-        <version>5.4.4</version>
+        <version>5.4.5</version>
     </parent>
 
     <artifactId>tooltip-protocollib</artifactId>
@@ -33,7 +33,7 @@
         <dependency>
             <groupId>su.nightexpress.excellentenchants</groupId>
             <artifactId>API</artifactId>
-            <version>5.4.4</version>
+            <version>5.4.5</version>
         </dependency>
 
         <dependency>

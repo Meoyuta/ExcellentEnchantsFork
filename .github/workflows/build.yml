@@ -34,7 +34,7 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: ExcellentEnchants-5.4.4
+          name: ExcellentEnchants-5.4.5
           if-no-files-found: error
           path: |
             target/ExcellentEnchants-*.jar

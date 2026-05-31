@@ -1,0 +1,25 @@
+Definition:
+  DisplayName: '<#279CF5>粗糙</#279CF5>'
+  Description:
+    - '<gray>持有该武器攻击时，只能造成 1 点伤害。</gray>'
+  Weight: 1
+  MaxLevel: 1
+  MinCost:
+    Base: 1
+    Per_Level: 0
+  MaxCost:
+    Base: 10
+    Per_Level: 0
+  AnvilCost: 1
+  SupportedItems: swords_axes
+  PrimaryItems: sword
+  Exclusives: []
+Distribution:
+  Treasure: false
+  Tradeable: true
+  TradeTypes:
+    - PLAINS_COMMON
+  On_Mob_Spawn_Equipment: true
+  On_Traded_Equipment: true
+  On_Random_Loot: true
+  Discoverable: true
