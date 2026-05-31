@@ -13,9 +13,20 @@ if not defined EE_BUILD_LOGGING (
 
 cd /d "%~dp0"
 
-set "MAVEN_OPTS=-Dfile.encoding=UTF-8"
-set "JAVA_HOME=D:\java\jdk-25"
-set "PATH=%JAVA_HOME%\bin;%PATH%"
+if defined MAVEN_OPTS (
+    set "MAVEN_OPTS=%MAVEN_OPTS% -Dfile.encoding=UTF-8"
+) else (
+    set "MAVEN_OPTS=-Dfile.encoding=UTF-8"
+)
+
+if defined JAVA_HOME (
+    if exist "%JAVA_HOME%\bin\java.exe" (
+        set "PATH=%JAVA_HOME%\bin;%PATH%"
+    ) else (
+        echo [ERROR] JAVA_HOME is set but java.exe was not found: %JAVA_HOME%
+        exit /b 1
+    )
+)
 
 for /f "delims=" %%i in ('powershell -NoProfile -Command "Get-Date -Format 'yyyy-MM-dd HH:mm:ss zzz'"') do set "BUILD_STARTED=%%i"
 
@@ -30,7 +41,12 @@ if %ERRORLEVEL% neq 0 (
 )
 where java >nul 2>nul
 if %ERRORLEVEL% neq 0 (
-    echo [ERROR] JDK not found. Please install JDK and add it to PATH.
+    echo [ERROR] Java not found. Set JAVA_HOME or add JDK 25 to PATH.
+    exit /b 1
+)
+where javac >nul 2>nul
+if %ERRORLEVEL% neq 0 (
+    echo [ERROR] javac not found. Set JAVA_HOME or add JDK 25 to PATH.
     exit /b 1
 )
 
