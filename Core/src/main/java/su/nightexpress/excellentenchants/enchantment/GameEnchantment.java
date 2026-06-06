@@ -117,6 +117,9 @@ public abstract class GameEnchantment implements CustomEnchantment {
     @NotNull
     public <T> T getComponent(@NotNull EnchantComponent<T> type) {
         Optional<?> optional = this.componentDatas.get(type);
+        if (optional == null) {
+            throw new IllegalStateException("Enchantment doesn't have the " + type.getName() + " component.");
+        }
         return (T) optional.orElseThrow(() -> new IllegalStateException("Enchantment doesn't have the " + type.getName() + " component."));
     }
 

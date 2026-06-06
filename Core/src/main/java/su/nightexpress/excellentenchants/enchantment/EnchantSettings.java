@@ -57,6 +57,32 @@ public class EnchantSettings extends AbstractConfig {
         "[Default is 5]"
     );
 
+    private final ConfigProperty<Boolean> anvilRemoveTooExpensive = this.addProperty(ConfigTypes.BOOLEAN, "Anvil.Remove_Too_Expensive",
+        false,
+        "Controls whether anvil operations can exceed the vanilla 'Too Expensive!' repair cost limit.",
+        "[Default is false]"
+    );
+
+    private final ConfigProperty<Integer> anvilExtraMaxLevel = this.addProperty(ConfigTypes.INT, "Anvil.Extra_Max_Level",
+        0,
+        "Sets how many levels above each enchantment's regular maximum non-creative players can produce on anvils.",
+        "Example: if an enchantment max level is 5 and this value is 3, the anvil can produce level 8.",
+        "[Default is 0]"
+    );
+
+    private final ConfigProperty<Boolean> anvilAllowConflictingEnchantments = this.addProperty(ConfigTypes.BOOLEAN, "Anvil.Allow_Conflicting_Enchantments",
+        false,
+        "Controls whether anvils can combine enchantments that normally conflict with each other.",
+        "When enabled, conflicting combinations use the configured conflict XP penalty multiplier.",
+        "[Default is false]"
+    );
+
+    private final ConfigProperty<Double> anvilConflictPenaltyMultiplier = this.addProperty(ConfigTypes.DOUBLE, "Anvil.Conflict_XP_Penalty",
+        1.5D,
+        "XP cost multiplier applied when an anvil combination adds a conflicting enchantment.",
+        "[Default is 1.5]"
+    );
+
     public long getArrowEffectsTickInterval() {
         return this.arrowEffectsTickInterval.get();
     }
@@ -75,5 +101,21 @@ public class EnchantSettings extends AbstractConfig {
 
     public int getAnvilEnchantsLimit() {
         return this.anvilEnchantLimit.get();
+    }
+
+    public boolean isAnvilTooExpensiveLimitRemoved() {
+        return this.anvilRemoveTooExpensive.get();
+    }
+
+    public int getAnvilExtraMaxLevel() {
+        return Math.max(0, this.anvilExtraMaxLevel.get());
+    }
+
+    public boolean isAnvilConflictingEnchantmentsAllowed() {
+        return this.anvilAllowConflictingEnchantments.get();
+    }
+
+    public double getAnvilConflictPenaltyMultiplier() {
+        return Math.max(1D, this.anvilConflictPenaltyMultiplier.get());
     }
 }

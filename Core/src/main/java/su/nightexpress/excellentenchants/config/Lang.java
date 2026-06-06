@@ -10,18 +10,68 @@ import static su.nightexpress.nightcore.util.text.night.wrapper.TagWrappers.*;
 
 public class Lang implements LangContainer {
 
-    public static final TextLocale COMMAND_ARGUMENT_NAME_LEVEL = LangEntry.builder("Command.Argument.Name.Level").text("level");
-    public static final TextLocale COMMAND_ARGUMENT_NAME_SLOT  = LangEntry.builder("Command.Argument.Name.Slot").text("slot");
+    public static final TextLocale COMMAND_ARGUMENT_NAME_PLAYER      = LangEntry.builder("Command.Argument.Name.Player").text("player");
+    public static final TextLocale COMMAND_ARGUMENT_NAME_AMOUNT      = LangEntry.builder("Command.Argument.Name.Amount").text("amount");
+    public static final TextLocale COMMAND_ARGUMENT_NAME_LEVEL       = LangEntry.builder("Command.Argument.Name.Level").text("level");
+    public static final TextLocale COMMAND_ARGUMENT_NAME_SLOT        = LangEntry.builder("Command.Argument.Name.Slot").text("slot");
+    public static final TextLocale COMMAND_ARGUMENT_NAME_ENCHANTMENT = LangEntry.builder("Command.Argument.Name.Enchantment").text("enchantment");
+    public static final TextLocale COMMAND_ARGUMENT_NAME_QUERY       = LangEntry.builder("Command.Argument.Name.Query").text("query");
+    public static final TextLocale COMMAND_ARGUMENT_NAME_STATE       = LangEntry.builder("Command.Argument.Name.State").text("state");
 
+    public static final TextLocale COMMAND_RELOAD_DESC      = LangEntry.builder("Command.Reload.Desc").text("Reload the plugin.");
     public static final TextLocale COMMAND_LIST_DESC        = LangEntry.builder("Command.List.Desc").text("Open enchantment information browser.");
     public static final TextLocale COMMAND_ENCHANT_DESC     = LangEntry.builder("Command.Enchant.Desc").text("Enchant item in specific slot.");
     public static final TextLocale COMMAND_DISENCHANT_DESC  = LangEntry.builder("Command.Disenchant.Desc").text("Disenchant item in specific slot.");
     public static final TextLocale COMMAND_BOOK_DESC        = LangEntry.builder("Command.Book.Desc").text("Give a book with specific enchantment.");
     public static final TextLocale COMMAND_RANDOM_BOOK_DESC = LangEntry.builder("Command.RandomBook.Desc").text("Give a book with random enchantment.");
     public static final TextLocale COMMAND_GIVE_FUEL_DESC   = LangEntry.builder("Command.GiveFuel.Desc").text("Give enchantment fuel item.");
+    public static final TextLocale COMMAND_QUERY_DESC       = LangEntry.builder("Command.Query.Desc").text("Query enchantment runtime status.");
+    public static final TextLocale COMMAND_UNYIELDING_DESC  = LangEntry.builder("Command.Unyielding.Desc").text("Set player's Unyielding active flag.");
 
     public static final MessageLocale COMMAND_LIST_DONE_OTHERS = LangEntry.builder("Command.List.DoneOthers").chatMessage(
         GRAY.wrap("Opened enchantments GUI for " + SOFT_YELLOW.wrap(PLAYER_NAME) + ".")
+    );
+
+    public static final MessageLocale COMMAND_QUERY_UNKNOWN = LangEntry.builder("Command.Query.Unknown").chatMessage(
+        GRAY.wrap("Unknown query target: " + SOFT_RED.wrap(GENERIC_TYPE) + ".")
+    );
+
+    public static final MessageLocale COMMAND_QUERY_UNYIELDING_UNAVAILABLE = LangEntry.builder("Command.Query.Unyielding.Unavailable").chatMessage(
+        SOFT_RED.wrap("Unyielding enchantment is not loaded.")
+    );
+
+    public static final MessageLocale COMMAND_QUERY_UNYIELDING_INACTIVE = LangEntry.builder("Command.Query.Unyielding.Inactive").chatMessage(
+        GRAY.wrap("Unyielding is inactive. Trigger a totem enchanted with it first, or enable the flag with the admin command.")
+    );
+
+    public static final MessageLocale COMMAND_QUERY_UNYIELDING_WAITING = LangEntry.builder("Command.Query.Unyielding.Waiting").chatMessage(
+        GRAY.wrap("Unyielding is active, but no damage types have been recorded yet.")
+    );
+
+    public static final MessageLocale COMMAND_QUERY_UNYIELDING_HEADER = LangEntry.builder("Command.Query.Unyielding.Header").chatMessage(
+        GRAY.wrap("──────── " + SOFT_YELLOW.wrap("Unyielding Status") + " ────────")
+    );
+
+    public static final MessageLocale COMMAND_QUERY_UNYIELDING_STATUS = LangEntry.builder("Command.Query.Unyielding.Status").chatMessage(
+        GRAY.wrap("Unyielding " + SOFT_YELLOW.wrap(GENERIC_TYPE) + ": " + SOFT_YELLOW.wrap(GENERIC_AMOUNT) +
+            " hits, next same-type damage multiplier " + SOFT_YELLOW.wrap(GENERIC_MODIFIER) +
+            ", reduction " + SOFT_YELLOW.wrap(GENERIC_DAMAGE + "%") + ".")
+    );
+
+    public static final MessageLocale COMMAND_QUERY_UNYIELDING_FOOTER = LangEntry.builder("Command.Query.Unyielding.Footer").chatMessage(
+        GRAY.wrap("────────────────────")
+    );
+
+    public static final MessageLocale UNYIELDING_IMMUNITY_REACHED = LangEntry.builder("Unyielding.ImmunityReached").chatMessage(
+        GRAY.wrap("Unyielding has made you immune to " + SOFT_YELLOW.wrap(GENERIC_TYPE) + " damage.")
+    );
+
+    public static final MessageLocale COMMAND_UNYIELDING_ENABLED = LangEntry.builder("Command.Unyielding.Enabled").chatMessage(
+        GRAY.wrap("Enabled the Unyielding flag for " + SOFT_YELLOW.wrap(PLAYER_DISPLAY_NAME) + ".")
+    );
+
+    public static final MessageLocale COMMAND_UNYIELDING_DISABLED = LangEntry.builder("Command.Unyielding.Disabled").chatMessage(
+        GRAY.wrap("Disabled the Unyielding flag for " + SOFT_YELLOW.wrap(PLAYER_DISPLAY_NAME) + " and cleared its tracked status.")
     );
 
 

@@ -2,6 +2,8 @@ package su.nightexpress.excellentenchants.manager.menu;
 
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
@@ -14,15 +16,10 @@ import su.nightexpress.excellentenchants.enchantment.EnchantRegistry;
 import su.nightexpress.nightcore.bridge.common.NightKey;
 import su.nightexpress.nightcore.config.ConfigValue;
 import su.nightexpress.nightcore.config.FileConfig;
-import su.nightexpress.nightcore.core.config.CoreLang;
+import su.nightexpress.nightcore.ui.menu.click.ClickResult;
 import su.nightexpress.nightcore.ui.menu.MenuViewer;
 import su.nightexpress.nightcore.ui.menu.data.ConfigBased;
-import su.nightexpress.nightcore.ui.menu.data.Filled;
-import su.nightexpress.nightcore.ui.menu.data.MenuFiller;
 import su.nightexpress.nightcore.ui.menu.data.MenuLoader;
-import su.nightexpress.nightcore.ui.menu.item.ItemHandler;
-import su.nightexpress.nightcore.ui.menu.item.ItemOptions;
-import su.nightexpress.nightcore.ui.menu.item.MenuItem;
 import su.nightexpress.nightcore.ui.menu.type.NormalMenu;
 import su.nightexpress.nightcore.util.*;
 import su.nightexpress.nightcore.util.bridge.RegistryType;
@@ -37,18 +34,12 @@ import java.util.stream.IntStream;
 import static su.nightexpress.excellentenchants.EnchantsPlaceholders.*;
 import static su.nightexpress.nightcore.util.text.tag.Tags.*;
 
-public class EnchantsMenu extends NormalMenu<EnchantsPlugin> implements ConfigBased, Filled<CustomEnchantment> {
+public class EnchantsMenu extends NormalMenu<EnchantsPlugin> implements ConfigBased {
 
     private static final String FILE_NAME = "enchants.yml";
 
     private static final String CONFLICTS = "%conflicts%";
     private static final String CHARGES   = "%charges%";
-
-    private static final int PREVIOUS_PAGE_SLOT = 45;
-    private static final int NEXT_PAGE_SLOT     = 53;
-
-    private static final String PREVIOUS_PAGE_HANDLER = "excellentenchants_previous_page";
-    private static final String NEXT_PAGE_HANDLER     = "excellentenchants_next_page";
 
     private final NamespacedKey levelKey;
 
@@ -57,6 +48,8 @@ public class EnchantsMenu extends NormalMenu<EnchantsPlugin> implements ConfigBa
     private List<String> enchantLoreMain;
     private List<String> enchantLoreConflicts;
     private List<String> enchantLoreCharges;
+    private NightItem    nextPageIcon;
+    private NightItem    previousPageIcon;
     private int[]        enchantSlots;
 
     public EnchantsMenu(@NotNull EnchantsPlugin plugin) {
@@ -67,94 +60,104 @@ public class EnchantsMenu extends NormalMenu<EnchantsPlugin> implements ConfigBa
     }
 
     @Override
+    public boolean open(@NotNull Player player) {
+        return this.open(player, viewer -> {
+            viewer.setPage(1);
+            viewer.setRebuildMenu(true);
+        });
+    }
+
+    @Override
     protected void onPrepare(@NotNull MenuViewer viewer, @NotNull InventoryView view) {
-        this.clearEnchantSlots(view);
-        this.autoFill(viewer);
+
     }
 
     @Override
     protected void onReady(@NotNull MenuViewer viewer, @NotNull Inventory inventory) {
-
+        this.renderPage(viewer, inventory);
     }
 
     @Override
-    @NotNull
-    public MenuFiller<CustomEnchantment> createFiller(@NotNull MenuViewer viewer) {
-        var autoFill = MenuFiller.builder(this);
+    public void onClick(@NotNull MenuViewer viewer, @NotNull ClickResult result, @NotNull InventoryClickEvent event) {
+        event.setCancelled(true);
+        if (result.isInventory()) return;
 
-        autoFill.setSlots(this.enchantSlots);
-        autoFill.setItems(EnchantRegistry.getRegistered().stream()
-            .filter(Predicate.not(CustomEnchantment::isHiddenFromList))
-            .sorted(Comparator.comparing((CustomEnchantment data) -> NightMessage.stripTags(data.getDisplayName()))
-                .thenComparing(CustomEnchantment::getId))
-            .toList()
-        );
-        autoFill.setItemCreator(enchantmentData -> this.buildEnchantIcon(enchantmentData, 1));
-        autoFill.setItemClick(enchantmentData -> (viewer1, event) -> {
-            if (!event.isLeftClick()) return;
+        int slot = result.getSlot();
+        Inventory inventory = viewer.getInventory();
+        if (slot == this.getNextPageSlot(inventory)) {
+            this.goToPage(viewer, viewer.getPage() + 1);
+            return;
+        }
 
-            ItemStack currentItem = event.getCurrentItem();
-            if (currentItem == null) return;
+        if (slot == this.getPreviousPageSlot(inventory)) {
+            this.goToPage(viewer, viewer.getPage() - 1);
+            return;
+        }
 
-            int levelHas = PDCUtil.getInt(currentItem, this.levelKey).orElse(1);
-            if (++levelHas > enchantmentData.getDefinition().getMaxLevel()) {
-                levelHas = 1;
+        if (!event.isLeftClick()) return;
+
+        CustomEnchantment enchantment = this.getEnchantAtSlot(viewer, slot);
+        if (enchantment == null) return;
+
+        ItemStack currentItem = event.getCurrentItem();
+        if (currentItem == null) return;
+
+        int levelHas = PDCUtil.getInt(currentItem, this.levelKey).orElse(1);
+        if (++levelHas > enchantment.getDefinition().getMaxLevel()) {
+            levelHas = 1;
+        }
+
+        ItemStack item = this.buildEnchantIcon(enchantment, levelHas).getItemStack();
+        PDCUtil.set(item, this.levelKey, levelHas);
+        event.setCurrentItem(item);
+        viewer.getInventory().setItem(slot, item);
+    }
+
+    private void goToPage(@NotNull MenuViewer viewer, int page) {
+        if (page < 1 || page > viewer.getPages() || page == viewer.getPage()) return;
+
+        viewer.setPage(page);
+        viewer.setRebuildMenu(false);
+        this.flush(viewer);
+    }
+
+    private void renderPage(@NotNull MenuViewer viewer, @NotNull Inventory inventory) {
+        this.clearDynamicSlots(inventory);
+
+        List<CustomEnchantment> enchantments = this.getVisibleEnchants();
+        int[] pageSlots = this.getPageSlots(inventory);
+        int perPage = pageSlots.length;
+        int pages = perPage <= 0 ? 1 : Math.max(1, (int) Math.ceil((double) enchantments.size() / (double) perPage));
+        int page = Math.clamp(viewer.getPage(), 1, pages);
+
+        viewer.setPages(pages);
+        viewer.setPage(page);
+
+        if (perPage > 0) {
+            int start = (page - 1) * perPage;
+            for (int slotIndex = 0; slotIndex < perPage; slotIndex++) {
+                int enchantIndex = start + slotIndex;
+                if (enchantIndex >= enchantments.size()) break;
+
+                int slot = pageSlots[slotIndex];
+                if (!this.isInventorySlot(inventory, slot)) continue;
+
+                ItemStack itemStack = this.buildEnchantIcon(enchantments.get(enchantIndex), 1).getItemStack();
+                inventory.setItem(slot, itemStack);
             }
-
-            ItemStack item = this.buildEnchantIcon(enchantmentData, levelHas).getItemStack();
-            PDCUtil.set(item, this.levelKey, levelHas);
-            event.setCurrentItem(item);
-        });
-
-        return autoFill.build();
-    }
-
-    @NotNull
-    private MenuItem buildNextPageItem() {
-        return MenuItem.builder(NightItem.fromType(Material.ARROW).localized(CoreLang.MENU_ICON_NEXT_PAGE))
-            .setHandler(new ItemHandler(NEXT_PAGE_HANDLER, (viewer, event) -> {
-                if (viewer.getPage() >= viewer.getPages()) return;
-
-                viewer.setPage(viewer.getPage() + 1);
-                viewer.setRebuildMenu(false);
-                this.flush(viewer);
-            }, ItemOptions.builder().setVisibilityPolicy(viewer -> viewer.getPage() < viewer.getPages()).build()))
-            .setSlots(NEXT_PAGE_SLOT)
-            .build();
-    }
-
-    @NotNull
-    private MenuItem buildPreviousPageItem() {
-        return MenuItem.builder(NightItem.fromType(Material.ARROW).localized(CoreLang.MENU_ICON_PREVIOUS_PAGE))
-            .setHandler(new ItemHandler(PREVIOUS_PAGE_HANDLER, (viewer, event) -> {
-                if (viewer.getPage() <= 1) return;
-
-                viewer.setPage(viewer.getPage() - 1);
-                viewer.setRebuildMenu(false);
-                this.flush(viewer);
-            }, ItemOptions.builder().setVisibilityPolicy(viewer -> viewer.getPage() > 1).build()))
-            .setSlots(PREVIOUS_PAGE_SLOT)
-            .build();
-    }
-
-    private void migratePageItem(@NotNull FileConfig config,
-                                 @NotNull String path,
-                                 @NotNull NightItem defaultItem,
-                                 @NotNull String handler,
-                                 int slot) {
-        if (!config.contains(path + ".Item")) {
-            config.set(path + ".Item", defaultItem);
-        }
-        if (!config.contains(path + ".Priority")) {
-            config.set(path + ".Priority", 0);
         }
 
-        config.setIntArray(path + ".Slots", new int[]{slot});
-        config.set(path + ".Type", handler);
+        int previousPageSlot = this.getPreviousPageSlot(inventory);
+        if (this.isInventorySlot(inventory, previousPageSlot)) {
+            inventory.setItem(previousPageSlot, this.previousPageIcon.copy().getItemStack());
+        }
+        int nextPageSlot = this.getNextPageSlot(inventory);
+        if (this.isInventorySlot(inventory, nextPageSlot)) {
+            inventory.setItem(nextPageSlot, this.nextPageIcon.copy().getItemStack());
+        }
     }
 
-    private void clearEnchantSlots(@NotNull InventoryView view) {
-        Inventory inventory = view.getTopInventory();
+    private void clearDynamicSlots(@NotNull Inventory inventory) {
         int size = inventory.getSize();
 
         for (int slot : this.enchantSlots) {
@@ -162,6 +165,66 @@ public class EnchantsMenu extends NormalMenu<EnchantsPlugin> implements ConfigBa
 
             inventory.clear(slot);
         }
+
+        int previousPageSlot = this.getPreviousPageSlot(inventory);
+        if (this.isInventorySlot(inventory, previousPageSlot)) {
+            inventory.clear(previousPageSlot);
+        }
+        int nextPageSlot = this.getNextPageSlot(inventory);
+        if (this.isInventorySlot(inventory, nextPageSlot)) {
+            inventory.clear(nextPageSlot);
+        }
+    }
+
+    @NotNull
+    private List<CustomEnchantment> getVisibleEnchants() {
+        return EnchantRegistry.getRegistered().stream()
+            .filter(Predicate.not(CustomEnchantment::isHiddenFromList))
+            .sorted(Comparator.comparing((CustomEnchantment data) -> NightMessage.stripTags(data.getDisplayName()))
+                .thenComparing(CustomEnchantment::getId))
+            .toList();
+    }
+
+    private CustomEnchantment getEnchantAtSlot(@NotNull MenuViewer viewer, int slot) {
+        int[] pageSlots = this.getPageSlots(viewer.getInventory());
+        int slotIndex = this.getEnchantSlotIndex(pageSlots, slot);
+        if (slotIndex < 0) return null;
+
+        int enchantIndex = (viewer.getPage() - 1) * pageSlots.length + slotIndex;
+        List<CustomEnchantment> enchantments = this.getVisibleEnchants();
+
+        return enchantIndex >= 0 && enchantIndex < enchantments.size() ? enchantments.get(enchantIndex) : null;
+    }
+
+    private int getEnchantSlotIndex(int[] slots, int slot) {
+        for (int index = 0; index < slots.length; index++) {
+            if (slots[index] == slot) return index;
+        }
+        return -1;
+    }
+
+    private int[] getPageSlots(@NotNull Inventory inventory) {
+        int previousPageSlot = this.getPreviousPageSlot(inventory);
+        int nextPageSlot = this.getNextPageSlot(inventory);
+
+        return Arrays.stream(this.enchantSlots)
+            .filter(slot -> this.isInventorySlot(inventory, slot))
+            .filter(slot -> slot != previousPageSlot && slot != nextPageSlot)
+            .distinct()
+            .toArray();
+    }
+
+    private int getPreviousPageSlot(@NotNull Inventory inventory) {
+        int size = inventory.getSize();
+        return size <= 0 ? -1 : Math.max(0, size - 9);
+    }
+
+    private int getNextPageSlot(@NotNull Inventory inventory) {
+        return inventory.getSize() - 1;
+    }
+
+    private boolean isInventorySlot(@NotNull Inventory inventory, int slot) {
+        return slot >= 0 && slot < inventory.getSize();
     }
 
     @NotNull
@@ -199,6 +262,12 @@ public class EnchantsMenu extends NormalMenu<EnchantsPlugin> implements ConfigBa
     @Override
     public void loadConfiguration(@NotNull FileConfig config, @NotNull MenuLoader loader) {
         this.enchantIcon = ConfigValue.create("Enchantment.Icon", new NightItem(Material.ENCHANTED_BOOK)).read(config);
+        this.nextPageIcon = ConfigValue.create("Navigation.Next_Icon", NightItem.fromType(Material.ARROW)
+            .setDisplayName(LIGHT_YELLOW.wrap("下一页 / Next Page"))
+            .setLore(Lists.newList(LIGHT_GRAY.wrap("打开下一页。 / Open the next page.")))).read(config);
+        this.previousPageIcon = ConfigValue.create("Navigation.Previous_Icon", NightItem.fromType(Material.ARROW)
+            .setDisplayName(LIGHT_YELLOW.wrap("上一页 / Previous Page"))
+            .setLore(Lists.newList(LIGHT_GRAY.wrap("打开上一页。 / Open the previous page.")))).read(config);
 
         this.enchantName = ConfigValue.create("Enchantment.Name",
             LIGHT_YELLOW.wrap(BOLD.wrap(ENCHANTMENT_NAME + " " + ENCHANTMENT_LEVEL))
@@ -230,24 +299,7 @@ public class EnchantsMenu extends NormalMenu<EnchantsPlugin> implements ConfigBa
             )).read(config);
 
         this.enchantSlots = Arrays.stream(ConfigValue.create("Enchantment.Slots", IntStream.range(0, 45).toArray()).read(config))
-            .filter(slot -> slot != PREVIOUS_PAGE_SLOT && slot != NEXT_PAGE_SLOT)
             .distinct()
             .toArray();
-
-
-        MenuItem nextPage = this.buildNextPageItem();
-        MenuItem previousPage = this.buildPreviousPageItem();
-
-        if (config.contains("Content")) {
-            this.migratePageItem(config, "Content." + NEXT_PAGE_HANDLER, nextPage.getItem(), NEXT_PAGE_HANDLER, NEXT_PAGE_SLOT);
-            this.migratePageItem(config, "Content." + PREVIOUS_PAGE_HANDLER, previousPage.getItem(), PREVIOUS_PAGE_HANDLER, PREVIOUS_PAGE_SLOT);
-            config.remove("Content.page_next");
-            config.remove("Content.page_previous");
-            config.remove("Content.next_page");
-            config.remove("Content.previous_page");
-        }
-
-        loader.addDefaultItem(nextPage);
-        loader.addDefaultItem(previousPage);
     }
 }

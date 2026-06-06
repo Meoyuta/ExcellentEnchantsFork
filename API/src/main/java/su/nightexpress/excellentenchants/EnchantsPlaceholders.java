@@ -64,15 +64,78 @@ public class EnchantsPlaceholders extends Placeholders {
             .add(ENCHANTMENT_LEVEL_MIN, level -> String.valueOf(1))
             .add(ENCHANTMENT_LEVEL_MAX, level -> String.valueOf(enchantment.getDefinition().getMaxLevel()))
             .add(ENCHANTMENT_FIT_ITEM_TYPES, level -> enchantment.getSupportedItems().getDisplayName())
-            .add(ENCHANTMENT_CHARGES_MAX_AMOUNT, level -> NumberUtil.format(enchantment.getCharges().getMaxAmount(level)))
-            .add(ENCHANTMENT_CHARGES_CONSUME_AMOUNT, level -> NumberUtil.format(enchantment.getCharges().getConsumeAmount()))
-            .add(ENCHANTMENT_CHARGES_RECHARGE_AMOUNT, level -> NumberUtil.format(enchantment.getCharges().getRechargeAmount()))
-            .add(ENCHANTMENT_CHARGES_FUEL_ITEM, level -> ItemUtil.getItemNameSerialized(enchantment.getFuel()))
-            .add(TRIGGER_CHANCE, level -> NumberUtil.format(enchantment.getComponent(EnchantComponent.PROBABILITY).getTriggerChance(level)))
-            .add(TIRGGER_INTERVAL, () -> NumberUtil.format(enchantment.getComponent(EnchantComponent.PERIODIC).getInterval()))
-            .add(EFFECT_AMPLIFIER, level -> NumberUtil.toRoman(enchantment.getComponent(EnchantComponent.POTION_EFFECT).getAmplifier(level)))
-            .add(EFFECT_DURATION, level -> NumberUtil.format(enchantment.getComponent(EnchantComponent.POTION_EFFECT).getDuration(level) / 20D))
-            .add(EFFECT_TYPE, () -> LangUtil.getSerializedName(enchantment.getComponent(EnchantComponent.POTION_EFFECT).getType()))
+            .add(ENCHANTMENT_CHARGES_MAX_AMOUNT, level -> getChargesMaxAmount(enchantment, level))
+            .add(ENCHANTMENT_CHARGES_CONSUME_AMOUNT, level -> getChargesConsumeAmount(enchantment))
+            .add(ENCHANTMENT_CHARGES_RECHARGE_AMOUNT, level -> getChargesRechargeAmount(enchantment))
+            .add(ENCHANTMENT_CHARGES_FUEL_ITEM, level -> getChargesFuelItem(enchantment))
+            .add(TRIGGER_CHANCE, level -> getTriggerChance(enchantment, level))
+            .add(TIRGGER_INTERVAL, () -> getTriggerInterval(enchantment))
+            .add(EFFECT_AMPLIFIER, level -> getEffectAmplifier(enchantment, level))
+            .add(EFFECT_DURATION, level -> getEffectDuration(enchantment, level))
+            .add(EFFECT_TYPE, () -> getEffectType(enchantment))
         );
+    }
+
+    @NotNull
+    private static String getChargesMaxAmount(@NotNull CustomEnchantment enchantment, int level) {
+        if (!enchantment.hasComponent(EnchantComponent.CHARGES)) return ENCHANTMENT_CHARGES_MAX_AMOUNT;
+
+        return NumberUtil.format(enchantment.getCharges().getMaxAmount(level));
+    }
+
+    @NotNull
+    private static String getChargesConsumeAmount(@NotNull CustomEnchantment enchantment) {
+        if (!enchantment.hasComponent(EnchantComponent.CHARGES)) return ENCHANTMENT_CHARGES_CONSUME_AMOUNT;
+
+        return NumberUtil.format(enchantment.getCharges().getConsumeAmount());
+    }
+
+    @NotNull
+    private static String getChargesRechargeAmount(@NotNull CustomEnchantment enchantment) {
+        if (!enchantment.hasComponent(EnchantComponent.CHARGES)) return ENCHANTMENT_CHARGES_RECHARGE_AMOUNT;
+
+        return NumberUtil.format(enchantment.getCharges().getRechargeAmount());
+    }
+
+    @NotNull
+    private static String getChargesFuelItem(@NotNull CustomEnchantment enchantment) {
+        if (!enchantment.hasComponent(EnchantComponent.CHARGES)) return ENCHANTMENT_CHARGES_FUEL_ITEM;
+
+        return ItemUtil.getItemNameSerialized(enchantment.getFuel());
+    }
+
+    @NotNull
+    private static String getTriggerChance(@NotNull CustomEnchantment enchantment, int level) {
+        if (!enchantment.hasComponent(EnchantComponent.PROBABILITY)) return TRIGGER_CHANCE;
+
+        return NumberUtil.format(enchantment.getComponent(EnchantComponent.PROBABILITY).getTriggerChance(level));
+    }
+
+    @NotNull
+    private static String getTriggerInterval(@NotNull CustomEnchantment enchantment) {
+        if (!enchantment.hasComponent(EnchantComponent.PERIODIC)) return TIRGGER_INTERVAL;
+
+        return NumberUtil.format(enchantment.getComponent(EnchantComponent.PERIODIC).getInterval());
+    }
+
+    @NotNull
+    private static String getEffectAmplifier(@NotNull CustomEnchantment enchantment, int level) {
+        if (!enchantment.hasComponent(EnchantComponent.POTION_EFFECT)) return EFFECT_AMPLIFIER;
+
+        return NumberUtil.toRoman(enchantment.getComponent(EnchantComponent.POTION_EFFECT).getAmplifier(level));
+    }
+
+    @NotNull
+    private static String getEffectDuration(@NotNull CustomEnchantment enchantment, int level) {
+        if (!enchantment.hasComponent(EnchantComponent.POTION_EFFECT)) return EFFECT_DURATION;
+
+        return NumberUtil.format(enchantment.getComponent(EnchantComponent.POTION_EFFECT).getDuration(level) / 20D);
+    }
+
+    @NotNull
+    private static String getEffectType(@NotNull CustomEnchantment enchantment) {
+        if (!enchantment.hasComponent(EnchantComponent.POTION_EFFECT)) return EFFECT_TYPE;
+
+        return LangUtil.getSerializedName(enchantment.getComponent(EnchantComponent.POTION_EFFECT).getType());
     }
 }

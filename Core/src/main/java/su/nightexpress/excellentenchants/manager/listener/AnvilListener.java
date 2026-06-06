@@ -1,8 +1,10 @@
 package su.nightexpress.excellentenchants.manager.listener;
 
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Sound;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -27,6 +29,8 @@ import java.util.Map;
 
 public class AnvilListener extends AbstractListener<EnchantsPlugin> {
 
+    private static final int MAX_FORCED_ENCHANT_LEVEL = 255;
+
     private final EnchantSettings settings;
     private final NamespacedKey rechargedKey;
 
@@ -47,6 +51,8 @@ public class AnvilListener extends AbstractListener<EnchantsPlugin> {
         if (second == null) second = new ItemStack(Material.AIR);
         if (result == null) result = new ItemStack(Material.AIR);
 
+        this.updateTooExpensiveLimit(event.getView());
+
         if (this.handleRecharge(event, first, second)) return;
 
         this.anvilCombine(event, first, second, result);
@@ -54,8 +60,10 @@ public class AnvilListener extends AbstractListener<EnchantsPlugin> {
 
     private boolean anvilCombine(@NotNull PrepareAnvilEvent event, @NotNull ItemStack first, @NotNull ItemStack second, @NotNull ItemStack result) {
         ItemStack merged = new ItemStack(result.getType().isAir() ? first : result);
+        MergeResult mergeResult = this.mergeConfiguredEnchantments(event, first, second, merged);
+        ItemStack finalResult = mergeResult.changed() || !result.getType().isAir() ? merged : result;
 
-        int countResult = EnchantsUtils.countCustomEnchantments(result);
+        int countResult = EnchantsUtils.countCustomEnchantments(finalResult);
         int countItem;
         if (EnchantsUtils.isEnchantedBook(second)) {
             countItem = EnchantsUtils.countCustomEnchantments(first);
@@ -75,7 +83,7 @@ public class AnvilListener extends AbstractListener<EnchantsPlugin> {
         }
 
         Map<CustomEnchantment, Integer> chargesMap = new HashMap<>();
-        EnchantsUtils.getCustomEnchantments(result).forEach((enchantment, level) -> {
+        EnchantsUtils.getCustomEnchantments(finalResult).forEach((enchantment, level) -> {
             int chargesFirst = enchantment.getCharges(first);
             int chargesSecond = enchantment.getCharges(second);
 
@@ -83,12 +91,121 @@ public class AnvilListener extends AbstractListener<EnchantsPlugin> {
             enchantment.setCharges(merged, level, chargesFirst + chargesSecond);
         });
 
-        if (!chargesMap.isEmpty()) {
+        if (mergeResult.changed() || !chargesMap.isEmpty()) {
             event.setResult(merged);
+            if (mergeResult.changed()) {
+                this.updateRepairCost(event.getView(), mergeResult.conflicting(), mergeResult.changedEnchantments());
+            }
             return true;
         }
 
         return false;
+    }
+
+    @NotNull
+    private MergeResult mergeConfiguredEnchantments(@NotNull PrepareAnvilEvent event,
+                                                   @NotNull ItemStack first,
+                                                   @NotNull ItemStack second,
+                                                   @NotNull ItemStack merged) {
+        int extraMaxLevel = this.settings.getAnvilExtraMaxLevel();
+        boolean allowConflicts = this.settings.isAnvilConflictingEnchantmentsAllowed();
+        if (extraMaxLevel <= 0 && !allowConflicts) return MergeResult.EMPTY;
+        if (first.getType().isAir() || second.getType().isAir()) return MergeResult.EMPTY;
+        if (!this.isEnchantMergeInput(first, second)) return MergeResult.EMPTY;
+
+        Map<Enchantment, Integer> secondEnchantments = EnchantsUtils.getEnchantments(second);
+        if (secondEnchantments.isEmpty()) return MergeResult.EMPTY;
+
+        boolean capLevel = event.getView().getPlayer() instanceof Player player && player.getGameMode() != GameMode.CREATIVE;
+        boolean changed = false;
+        boolean conflicting = false;
+        int changedEnchantments = 0;
+
+        for (Map.Entry<Enchantment, Integer> entry : secondEnchantments.entrySet()) {
+            Enchantment enchantment = entry.getKey();
+            int incomingLevel = entry.getValue();
+            int currentLevel = EnchantsUtils.getLevel(merged, enchantment);
+
+            if (!this.canApplyOnAnvil(first, enchantment, currentLevel)) continue;
+
+            Map<Enchantment, Integer> currentEnchantments = EnchantsUtils.getEnchantments(merged);
+            boolean hasConflicts = this.hasConflictingEnchantments(enchantment, currentEnchantments);
+            if (hasConflicts && currentLevel <= 0 && !allowConflicts) continue;
+
+            int combinedLevel = this.combineLevel(currentLevel, incomingLevel);
+            int allowedLevel = this.getAllowedAnvilLevel(enchantment, capLevel, extraMaxLevel);
+            int nextLevel = Math.min(combinedLevel, allowedLevel);
+            if (nextLevel <= currentLevel) continue;
+
+            if (!EnchantsUtils.add(merged, enchantment, nextLevel, true)) continue;
+
+            changed = true;
+            changedEnchantments++;
+            if (hasConflicts) {
+                conflicting = true;
+            }
+        }
+
+        return changed ? new MergeResult(true, conflicting, changedEnchantments) : MergeResult.EMPTY;
+    }
+
+    private boolean isEnchantMergeInput(@NotNull ItemStack first, @NotNull ItemStack second) {
+        return EnchantsUtils.isEnchantedBook(second) || first.getType() == second.getType();
+    }
+
+    private boolean canApplyOnAnvil(@NotNull ItemStack target, @NotNull Enchantment enchantment, int currentLevel) {
+        return currentLevel > 0 || EnchantsUtils.isEnchantedBook(target) || enchantment.canEnchantItem(target);
+    }
+
+    private boolean hasConflictingEnchantments(@NotNull Enchantment enchantment, @NotNull Map<Enchantment, Integer> enchantments) {
+        for (Enchantment other : enchantments.keySet()) {
+            if (other.equals(enchantment)) continue;
+            if (enchantment.conflictsWith(other) || other.conflictsWith(enchantment)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private int combineLevel(int currentLevel, int incomingLevel) {
+        if (currentLevel <= 0) return incomingLevel;
+        return currentLevel == incomingLevel ? currentLevel + 1 : Math.max(currentLevel, incomingLevel);
+    }
+
+    private int getAllowedAnvilLevel(@NotNull Enchantment enchantment, boolean capLevel, int extraMaxLevel) {
+        if (!capLevel) return MAX_FORCED_ENCHANT_LEVEL;
+
+        int vanillaMax = enchantment.getMaxLevel();
+        long allowedLevel = (long) vanillaMax + extraMaxLevel;
+        return (int) Math.min(MAX_FORCED_ENCHANT_LEVEL, Math.max(1L, allowedLevel));
+    }
+
+    private void updateRepairCost(@NotNull AnvilView anvilView, boolean conflicting, int changedEnchantments) {
+        int repairCost = anvilView.getRepairCost();
+        if (repairCost <= 0) {
+            repairCost = Math.max(1, changedEnchantments);
+        }
+
+        if (conflicting) {
+            repairCost = (int) Math.ceil((double) repairCost * this.settings.getAnvilConflictPenaltyMultiplier());
+        }
+
+        int finalRepairCost = Math.max(1, repairCost);
+        this.plugin.runTask(() -> {
+            anvilView.setRepairCost(finalRepairCost);
+            this.applyTooExpensiveLimit(anvilView);
+        });
+    }
+
+    private void updateTooExpensiveLimit(@NotNull AnvilView anvilView) {
+        this.applyTooExpensiveLimit(anvilView);
+        this.plugin.runTask(() -> this.applyTooExpensiveLimit(anvilView));
+    }
+
+    private void applyTooExpensiveLimit(@NotNull AnvilView anvilView) {
+        if (!this.settings.isAnvilTooExpensiveLimitRemoved()) return;
+
+        anvilView.setMaximumRepairCost(Integer.MAX_VALUE);
     }
 
     private boolean handleRecharge(@NotNull PrepareAnvilEvent event, @NotNull ItemStack first, @NotNull ItemStack second) {
@@ -112,7 +229,10 @@ public class AnvilListener extends AbstractListener<EnchantsPlugin> {
         PDCUtil.set(recharged, this.rechargedKey, count);
         event.setResult(recharged);
 
-        this.plugin.runTask(() -> event.getView().setRepairCost(chargable.size()));
+        this.plugin.runTask(() -> {
+            event.getView().setRepairCost(chargable.size());
+            this.applyTooExpensiveLimit(event.getView());
+        });
         return true;
     }
 
@@ -148,6 +268,11 @@ public class AnvilListener extends AbstractListener<EnchantsPlugin> {
 
         anvilInventory.setItem(0, null);
         anvilInventory.setItem(2, null);
+    }
+
+    private record MergeResult(boolean changed, boolean conflicting, int changedEnchantments) {
+
+        private static final MergeResult EMPTY = new MergeResult(false, false, 0);
     }
 }
 

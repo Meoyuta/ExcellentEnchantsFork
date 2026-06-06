@@ -1,28 +1,66 @@
 Command:
+  Argument:
+    Name:
+      Player: '玩家'
+      Amount: '数量'
+      Level: '等级'
+      Slot: '槽位'
+      Enchantment: '附魔'
+      Query: '查询'
+      State: '状态'
+  Reload:
+    Desc: '重载插件。'
   List:
-    Desc: '自定义附魔列表.'
+    Desc: '打开附魔信息浏览器。'
     Usage: '[player]'
-    DoneOthers: <light_gray>为玩家<light_yellow>%player_name%</light_yellow>打开GUI.</light_gray>
-  GetFuel:
-    Desc: '获得充能物品.'
-    Usage: <enchant> [amount]
-    Done: <light_gray>你获得了<light_yellow>x%amount% %name%</light_yellow>.</light_gray>
+    DoneOthers: <light_gray>已为<light_yellow>%player_name%</light_yellow>打开附魔浏览界面。</light_gray>
+  GiveFuel:
+    Desc: '给予附魔充能物品。'
+  RandomBook:
+    Desc: '给予一本随机附魔书。'
   Enchant:
     Usage: <enchant> <level> [player] [slot]
-    Desc: '附魔手上的物品.'
+    Desc: '为指定槽位的物品添加附魔。'
     Done:
-      Self: <light_gray><light_yellow>%item%</light_yellow>的附魔是<light_yellow>%enchant% %level%</light_yellow>!</light_gray>
-      Others: <light_gray><light_yellow>%player_display_name%</light_yellow>的<light_yellow>%item%</light_yellow>的附魔是<light_yellow>%enchant% %level%</light_yellow>!</light_gray>
+      Self: <light_gray>已为<light_yellow>%item%</light_yellow>添加<light_yellow>%enchant% %level%</light_yellow>。</light_gray>
+      Others: <light_gray>已为<light_yellow>%player_display_name%</light_yellow>的<light_yellow>%item%</light_yellow>添加<light_yellow>%enchant% %level%</light_yellow>。</light_gray>
     Error:
-      NoItem: <red>没有要附魔的物品!</red>
+      NoItem: <red>没有可附魔的物品！</red>
+  Disenchant:
+    Desc: '移除指定槽位物品上的附魔。'
+    Done:
+      Self: <light_gray>已从<light_yellow>%item%</light_yellow>移除<light_yellow>%enchant%</light_yellow>。</light_gray>
+      Others: <light_gray>已从<light_yellow>%player_display_name%</light_yellow>的<light_yellow>%item%</light_yellow>移除<light_yellow>%enchant%</light_yellow>。</light_gray>
   Book:
     Usage: <player> <enchant> <level>
-    Desc: '给予自定义附魔书.'
-    Done: <light_gray>将<light_yellow>%enchant%</light_yellow>附魔书给予<light_yellow>%player_display_name%</light_yellow>.</light_gray>
+    Desc: '给予一本指定附魔书。'
+    Done: <light_gray>已将<light_yellow>%enchant% %level%</light_yellow>附魔书给予<light_yellow>%player_display_name%</light_yellow>。</light_gray>
+  Query:
+    Desc: '查询附魔运行状态。'
+    Unknown: <light_gray>未知查询目标：<light_red>%type%</light_red>。</light_gray>
+    Unyielding:
+      Unavailable: <light_red>百折不挠附魔未加载。</light_red>
+      Inactive: <light_gray>百折不挠未激活。需要先触发带有该附魔的不死图腾，或使用设置指令开启标记。</light_gray>
+      Waiting: <light_gray>百折不挠已激活，但尚未记录任何伤害类型。</light_gray>
+      Header: <light_gray>──────── <light_yellow>百折不挠状态</light_yellow> ────────</light_gray>
+      Status: <light_gray>百折不挠 <light_yellow>%type%</light_yellow>：累计 <light_yellow>%amount%</light_yellow> 次，下次同类伤害倍率 <light_yellow>%modifier%</light_yellow>，减伤 <light_yellow>%damage%%</light_yellow>。</light_gray>
+      Footer: <light_gray>────────────────────</light_gray>
+  Unyielding:
+    Desc: '设置玩家的百折不挠标记状态。'
+    Enabled: <light_gray>已为<light_yellow>%player_display_name%</light_yellow>开启百折不挠标记。</light_gray>
+    Disabled: <light_gray>已为<light_yellow>%player_display_name%</light_yellow>关闭百折不挠标记，并清除其累计状态。</light_gray>
+  Syntax:
+    InvalidSlot: <light_gray><light_red>%input%</light_red>不是有效槽位！</light_gray>
   RarityBook:
     Usage: <player> <tier> <level>
     Desc: '给予指定品质的附魔书'
     Done: <light_gray>将<light_yellow>%name%</light_yellow>附魔书给予<light_yellow>%player_display_name%</light_yellow>.</light_gray>
+Charges:
+  Fuel:
+    Gave: <light_gray>已将<light_yellow>x%amount% %name%</light_yellow>充能物品给予<light_yellow>%player_name%</light_yellow>。</light_gray>
+    BadEnchantment: <light_gray>附魔<light_red>%name%</light_red>不能充能。</light_gray>
+Unyielding:
+  ImmunityReached: <light_gray>百折不挠已使你免疫<light_yellow>%type%</light_yellow>伤害。</light_gray>
 Error:
   InvalidEnchantment: <red>无效的参数.</red>
   InvalidRarity: <red>无效的品质类型!</red>

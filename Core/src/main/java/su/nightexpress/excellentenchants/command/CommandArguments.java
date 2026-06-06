@@ -24,13 +24,17 @@ public class CommandArguments {
     public static final String LEVEL   = "level";
     public static final String ENCHANT = "enchant";
     public static final String SLOT    = "slot";
+    public static final String QUERY   = "query";
+    public static final String STATE   = "state";
     
     public static final String FLAG_CUSTOM  = "custom";
     public static final String FLAG_CHARGED = "charged";
 
     @NotNull
     public static ArgumentNodeBuilder<Enchantment> enchantArgument(@NotNull String name) {
-        return Arguments.enchantment(name).suggestions((reader, context) -> BukkitThing.getAsStrings(RegistryType.ENCHANTMENT));
+        return Arguments.enchantment(name)
+            .localized(Lang.COMMAND_ARGUMENT_NAME_ENCHANTMENT)
+            .suggestions((reader, context) -> BukkitThing.getAsStrings(RegistryType.ENCHANTMENT));
     }
 
     @NotNull
@@ -38,7 +42,7 @@ public class CommandArguments {
         return Commands.argument(name, (context, string) ->
                 Optional.ofNullable(EnchantRegistry.getById(string)).orElseThrow(() -> CommandSyntaxException.custom(CoreLang.COMMAND_SYNTAX_INVALID_ENCHANTMENT))
             )
-            .localized(CoreLang.COMMAND_ARGUMENT_NAME_ENCHANTMENT)
+            .localized(Lang.COMMAND_ARGUMENT_NAME_ENCHANTMENT)
             .suggestions((reader, context) -> EnchantRegistry.getRegisteredNames());
     }
 

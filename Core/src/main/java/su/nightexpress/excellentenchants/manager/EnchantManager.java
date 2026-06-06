@@ -23,6 +23,7 @@ import su.nightexpress.excellentenchants.api.enchantment.type.BlockEnchant;
 import su.nightexpress.excellentenchants.api.enchantment.type.ProjectileEnchant;
 import su.nightexpress.excellentenchants.api.item.ItemSetDefaults;
 import su.nightexpress.excellentenchants.enchantment.*;
+import su.nightexpress.excellentenchants.enchantment.universal.UnyieldingEnchant;
 import su.nightexpress.excellentenchants.manager.block.TickedBlock;
 import su.nightexpress.excellentenchants.manager.damage.Explosion;
 import su.nightexpress.excellentenchants.manager.listener.AnvilListener;
@@ -92,6 +93,7 @@ public class EnchantManager extends AbstractManager<EnchantsPlugin> {
 
     @Override
     protected void onShutdown() {
+        this.saveUnyieldingMemory();
         this.restoreBlocks();
 
         if (this.enchantsMenu != null) this.enchantsMenu.clear();
@@ -99,6 +101,13 @@ public class EnchantManager extends AbstractManager<EnchantsPlugin> {
         this.arrowEffects.clear();
         this.tickedBlocks.clear();
         this.explosions.clear();
+    }
+
+    private void saveUnyieldingMemory() {
+        CustomEnchantment enchantment = EnchantRegistry.getById(UnyieldingEnchant.ID);
+        if (enchantment instanceof UnyieldingEnchant unyielding) {
+            unyielding.saveMemory();
+        }
     }
 
     private void loadEnchants() {
