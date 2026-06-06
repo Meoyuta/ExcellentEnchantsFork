@@ -1,0 +1,49 @@
+Settings:
+  Charges: false
+Definition:
+  DisplayName: '<#279CF5>百折不挠</#279CF5>'
+  Description:
+    - '<gray>当附魔的不死图腾触发后，获得持续到死亡的适应减伤。</gray>'
+    - '<gray>连续受到同种伤害至少 %unyielding_minimum_streak% 次后，后续同种伤害按连续次数逐步降低。</gray>'
+    - '<gray>第 N 次连续伤害后的下一次同种伤害为 伤害 * (%unyielding_reduction_base% ^ N)。</gray>'
+  Weight: 1
+  MaxLevel: 1
+  MinCost:
+    Base: 20
+    Per_Level: 0
+  MaxCost:
+    Base: 40
+    Per_Level: 0
+  AnvilCost: 8
+  SupportedItems: totem
+  PrimaryItems: totem
+  Exclusives: []
+Distribution:
+  Treasure: true
+  Tradeable: true
+  TradeTypes:
+    - DESERT_COMMON
+    - DESERT_SPECIAL
+    - PLAINS_COMMON
+    - PLAINS_SPECIAL
+    - SAVANNA_COMMON
+    - SAVANNA_SPECIAL
+    - JUNGLE_COMMON
+    - JUNGLE_SPECIAL
+    - SNOW_COMMON
+    - SNOW_SPECIAL
+    - SWAMP_COMMON
+    - SWAMP_SPECIAL
+    - TAIGA_COMMON
+    - TAIGA_SPECIAL
+  On_Mob_Spawn_Equipment: false
+  On_Traded_Equipment: false
+  On_Random_Loot: false
+  Discoverable: false
+Unyielding:
+  Minimum_Streak: 3
+  Reduction_Base: 0.95
+  Immunity_Threshold: 0.001
+  Ancient_City_Loot:
+    Min_Books: 1
+    Max_Books: 2

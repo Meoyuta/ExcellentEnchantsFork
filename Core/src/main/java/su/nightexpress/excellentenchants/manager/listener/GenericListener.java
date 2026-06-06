@@ -11,12 +11,16 @@ import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.world.LootGenerateEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import su.nightexpress.excellentenchants.EnchantsPlugin;
 import su.nightexpress.excellentenchants.EnchantsUtils;
+import su.nightexpress.excellentenchants.api.enchantment.CustomEnchantment;
 import su.nightexpress.excellentenchants.config.Config;
+import su.nightexpress.excellentenchants.enchantment.EnchantRegistry;
+import su.nightexpress.excellentenchants.enchantment.universal.UnyieldingEnchant;
 import su.nightexpress.excellentenchants.manager.EnchantManager;
 import su.nightexpress.nightcore.manager.AbstractListener;
 
@@ -50,6 +54,17 @@ public class GenericListener extends AbstractListener<EnchantsPlugin> {
 
             inventory.setItem(0, result);
         });
+    }
+
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    public void onAncientCityLoot(LootGenerateEvent event) {
+        if (event.isPlugin()) return;
+
+        CustomEnchantment enchantment = EnchantRegistry.getById(UnyieldingEnchant.ID);
+        if (!(enchantment instanceof UnyieldingEnchant unyielding)) return;
+        if (this.manager.getSettings().isEnchantDisabledInWorld(event.getWorld(), unyielding)) return;
+
+        unyielding.populateAncientCityLoot(event);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)

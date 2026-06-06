@@ -32,6 +32,7 @@ import su.nightexpress.excellentenchants.api.enchantment.component.EnchantCompon
 import su.nightexpress.excellentenchants.api.enchantment.type.BlockEnchant;
 import su.nightexpress.excellentenchants.api.enchantment.type.ProtectionEnchant;
 import su.nightexpress.excellentenchants.enchantment.EnchantRegistry;
+import su.nightexpress.excellentenchants.enchantment.universal.UnyieldingEnchant;
 import su.nightexpress.excellentenchants.enchantment.weapon.RoughnessEnchant;
 import su.nightexpress.excellentenchants.manager.EnchantManager;
 import su.nightexpress.nightcore.manager.AbstractListener;
@@ -43,6 +44,7 @@ import java.util.Map;
 public class EnchantListener extends AbstractListener<EnchantsPlugin> {
 
     private static final EquipmentSlot[] ARMOR_SLOTS = {EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET, EquipmentSlot.OFF_HAND};
+    private static final EquipmentSlot[] RESURRECT_SLOTS = {EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET, EquipmentSlot.HAND, EquipmentSlot.OFF_HAND};
 
     private final EnchantManager manager;
 
@@ -234,6 +236,16 @@ public class EnchantListener extends AbstractListener<EnchantsPlugin> {
         event.setDamage(RoughnessEnchant.DAMAGE);
     }
 
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onUnyieldingDamage(EntityDamageEvent event) {
+        if (!(event.getEntity() instanceof Player player)) return;
+
+        UnyieldingEnchant unyielding = this.getUnyieldingEnchant();
+        if (unyielding == null) return;
+
+        unyielding.handleDamage(event, player);
+    }
+
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true) // ignoreCancelled for Paper compatibility
     public void onEntityDeath(EntityDeathEvent event) {
         LivingEntity entity = event.getEntity();
@@ -241,6 +253,11 @@ public class EnchantListener extends AbstractListener<EnchantsPlugin> {
 
         if (event instanceof PlayerDeathEvent deathEvent) {
             Player player = deathEvent.getPlayer();
+            UnyieldingEnchant unyielding = this.getUnyieldingEnchant();
+            if (unyielding != null) {
+                unyielding.clear(player);
+            }
+
             this.manager.handleInventoryEnchants(player, EnchantRegistry.INVENTORY, (item, enchant, level) -> enchant.onDeath(deathEvent, player, item, level));
         }
 
@@ -255,7 +272,13 @@ public class EnchantListener extends AbstractListener<EnchantsPlugin> {
     public void onResurrect(EntityResurrectEvent event) {
         LivingEntity entity = event.getEntity();
 
-        this.manager.handleInSlots(entity, ARMOR_SLOTS, EnchantRegistry.RESURRECT, (item, enchant, level) -> enchant.onResurrect(event, entity, item, level));
+        this.manager.handleInSlots(entity, RESURRECT_SLOTS, EnchantRegistry.RESURRECT, (item, enchant, level) -> enchant.onResurrect(event, entity, item, level));
+    }
+
+    private UnyieldingEnchant getUnyieldingEnchant() {
+        CustomEnchantment enchantment = EnchantRegistry.getById(UnyieldingEnchant.ID);
+
+        return enchantment instanceof UnyieldingEnchant unyielding ? unyielding : null;
     }
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)

@@ -41,6 +41,9 @@ public class EnchantsMenu extends NormalMenu<EnchantsPlugin> implements ConfigBa
     private static final String CONFLICTS = "%conflicts%";
     private static final String CHARGES   = "%charges%";
 
+    private static final int PREVIOUS_PAGE_SLOT = 45;
+    private static final int NEXT_PAGE_SLOT     = 53;
+
     private final NamespacedKey levelKey;
 
     private NightItem    enchantIcon;
@@ -59,6 +62,7 @@ public class EnchantsMenu extends NormalMenu<EnchantsPlugin> implements ConfigBa
 
     @Override
     protected void onPrepare(@NotNull MenuViewer viewer, @NotNull InventoryView view) {
+        this.clearEnchantSlots(view);
         this.autoFill(viewer);
     }
 
@@ -75,7 +79,8 @@ public class EnchantsMenu extends NormalMenu<EnchantsPlugin> implements ConfigBa
         autoFill.setSlots(this.enchantSlots);
         autoFill.setItems(EnchantRegistry.getRegistered().stream()
             .filter(Predicate.not(CustomEnchantment::isHiddenFromList))
-            .sorted(Comparator.comparing(data -> NightMessage.stripTags(data.getDisplayName())))
+            .sorted(Comparator.comparing((CustomEnchantment data) -> NightMessage.stripTags(data.getDisplayName()))
+                .thenComparing(CustomEnchantment::getId))
             .toList()
         );
         autoFill.setItemCreator(enchantmentData -> this.buildEnchantIcon(enchantmentData, 1));
@@ -96,6 +101,17 @@ public class EnchantsMenu extends NormalMenu<EnchantsPlugin> implements ConfigBa
         });
 
         return autoFill.build();
+    }
+
+    private void clearEnchantSlots(@NotNull InventoryView view) {
+        Inventory inventory = view.getTopInventory();
+        int size = inventory.getSize();
+
+        for (int slot : this.enchantSlots) {
+            if (slot < 0 || slot >= size) continue;
+
+            inventory.clear(slot);
+        }
     }
 
     @NotNull
@@ -163,11 +179,14 @@ public class EnchantsMenu extends NormalMenu<EnchantsPlugin> implements ConfigBa
                 LIGHT_YELLOW.wrap("▪ " + LIGHT_GRAY.wrap("Charges: ") + GENERIC_AMOUNT + "⚡" + LIGHT_GRAY.wrap(" (" + WHITE.wrap(GENERIC_ITEM) + ")"))
             )).read(config);
 
-        this.enchantSlots = ConfigValue.create("Enchantment.Slots", IntStream.range(0, 45).toArray()).read(config);
+        this.enchantSlots = Arrays.stream(ConfigValue.create("Enchantment.Slots", IntStream.range(0, 45).toArray()).read(config))
+            .filter(slot -> slot != PREVIOUS_PAGE_SLOT && slot != NEXT_PAGE_SLOT)
+            .distinct()
+            .toArray();
 
 
-        loader.addDefaultItem(MenuItem.buildNextPage(this, 53));
-        loader.addDefaultItem(MenuItem.buildPreviousPage(this, 45));
+        loader.addDefaultItem(MenuItem.buildNextPage(this, NEXT_PAGE_SLOT));
+        loader.addDefaultItem(MenuItem.buildPreviousPage(this, PREVIOUS_PAGE_SLOT));
     }
 }
 

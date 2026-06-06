@@ -29,6 +29,7 @@ public enum ItemSetDefaults {
     CROSSBOW(tagLookup -> ItemSet.buildByType("crossbow", Material.CROSSBOW).slots(EquipmentSlot.HAND, EquipmentSlot.OFF_HAND).name("Crossbow").build()),
     FISHING_ROD(tagLookup -> ItemSet.buildByType("fishing_rod", Material.FISHING_ROD).slots(EquipmentSlot.HAND, EquipmentSlot.OFF_HAND).name("Fishing Rod").build()),
     SHIELD(tagLookup -> ItemSet.buildByType("shield", Material.SHIELD).slots(EquipmentSlot.OFF_HAND).name("Shield").build()),
+    TOTEM(tagLookup -> ItemSet.buildByType("totem", Material.TOTEM_OF_UNDYING).slots(EquipmentSlot.HAND, EquipmentSlot.OFF_HAND).name("Totem of Undying").build()),
     BREAKABLE(tagLookup -> ItemSet.buildByName("breakable", tagLookup.getBreakable()).slots(EquipmentSlot.values()).name("Brekable").build()),
     ARMOR(tagLookup -> ItemSet.buildByName("armor", getArmors(tagLookup)).slots(EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET).name("Armor").build()),
     TOOL(tagLookup -> ItemSet.buildByName("tool", getTools(tagLookup)).slots(EquipmentSlot.HAND).name("Tool").build()),

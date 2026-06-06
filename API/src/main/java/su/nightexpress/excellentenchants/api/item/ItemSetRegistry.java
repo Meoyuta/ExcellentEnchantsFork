@@ -39,9 +39,18 @@ public class ItemSetRegistry {
 
         FileConfig config = FileConfig.load(this.file);
 
-        if (config.getSection("Categories").isEmpty()) {
+        Set<String> categories = config.getSection("Categories");
+        if (categories.isEmpty()) {
             ItemSetDefaults.stream().map(ItemSetDefaults::getItemSet).forEach(itemSet -> {
                 config.set("Categories." + itemSet.getId(), itemSet);
+            });
+        }
+        else {
+            ItemSetDefaults.stream().map(ItemSetDefaults::getItemSet).forEach(itemSet -> {
+                boolean exists = categories.stream().anyMatch(id -> LowerCase.INTERNAL.apply(id).equals(itemSet.getId()));
+                if (!exists) {
+                    config.set("Categories." + itemSet.getId(), itemSet);
+                }
             });
         }
 

@@ -91,6 +91,7 @@ public enum EnchantCatalog implements EnchantCatalogEntry {
     CURSE_OF_MISFORTUNE(CurseOfMisfortuneEnchant::new, true),
     RESTORE(RestoreEnchant::new),
     SOULBOUND(SoulboundEnchant::new),
+    UNYIELDING(UnyieldingEnchant::new),
     BANE_OF_NETHERSPAWN(BaneOfNetherspawnEnchant::new),
     BLINDNESS(BlindnessEnchant::new),
     CONFUSION(ConfusionEnchant::new),
