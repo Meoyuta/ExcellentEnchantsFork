@@ -14,11 +14,14 @@ import su.nightexpress.excellentenchants.enchantment.EnchantRegistry;
 import su.nightexpress.nightcore.bridge.common.NightKey;
 import su.nightexpress.nightcore.config.ConfigValue;
 import su.nightexpress.nightcore.config.FileConfig;
+import su.nightexpress.nightcore.core.config.CoreLang;
 import su.nightexpress.nightcore.ui.menu.MenuViewer;
 import su.nightexpress.nightcore.ui.menu.data.ConfigBased;
 import su.nightexpress.nightcore.ui.menu.data.Filled;
 import su.nightexpress.nightcore.ui.menu.data.MenuFiller;
 import su.nightexpress.nightcore.ui.menu.data.MenuLoader;
+import su.nightexpress.nightcore.ui.menu.item.ItemHandler;
+import su.nightexpress.nightcore.ui.menu.item.ItemOptions;
 import su.nightexpress.nightcore.ui.menu.item.MenuItem;
 import su.nightexpress.nightcore.ui.menu.type.NormalMenu;
 import su.nightexpress.nightcore.util.*;
@@ -43,6 +46,9 @@ public class EnchantsMenu extends NormalMenu<EnchantsPlugin> implements ConfigBa
 
     private static final int PREVIOUS_PAGE_SLOT = 45;
     private static final int NEXT_PAGE_SLOT     = 53;
+
+    private static final String PREVIOUS_PAGE_HANDLER = "excellentenchants_previous_page";
+    private static final String NEXT_PAGE_HANDLER     = "excellentenchants_next_page";
 
     private final NamespacedKey levelKey;
 
@@ -101,6 +107,50 @@ public class EnchantsMenu extends NormalMenu<EnchantsPlugin> implements ConfigBa
         });
 
         return autoFill.build();
+    }
+
+    @NotNull
+    private MenuItem buildNextPageItem() {
+        return MenuItem.builder(NightItem.fromType(Material.ARROW).localized(CoreLang.MENU_ICON_NEXT_PAGE))
+            .setHandler(new ItemHandler(NEXT_PAGE_HANDLER, (viewer, event) -> {
+                if (viewer.getPage() >= viewer.getPages()) return;
+
+                viewer.setPage(viewer.getPage() + 1);
+                viewer.setRebuildMenu(false);
+                this.flush(viewer);
+            }, ItemOptions.builder().setVisibilityPolicy(viewer -> viewer.getPage() < viewer.getPages()).build()))
+            .setSlots(NEXT_PAGE_SLOT)
+            .build();
+    }
+
+    @NotNull
+    private MenuItem buildPreviousPageItem() {
+        return MenuItem.builder(NightItem.fromType(Material.ARROW).localized(CoreLang.MENU_ICON_PREVIOUS_PAGE))
+            .setHandler(new ItemHandler(PREVIOUS_PAGE_HANDLER, (viewer, event) -> {
+                if (viewer.getPage() <= 1) return;
+
+                viewer.setPage(viewer.getPage() - 1);
+                viewer.setRebuildMenu(false);
+                this.flush(viewer);
+            }, ItemOptions.builder().setVisibilityPolicy(viewer -> viewer.getPage() > 1).build()))
+            .setSlots(PREVIOUS_PAGE_SLOT)
+            .build();
+    }
+
+    private void migratePageItem(@NotNull FileConfig config,
+                                 @NotNull String path,
+                                 @NotNull NightItem defaultItem,
+                                 @NotNull String handler,
+                                 int slot) {
+        if (!config.contains(path + ".Item")) {
+            config.set(path + ".Item", defaultItem);
+        }
+        if (!config.contains(path + ".Priority")) {
+            config.set(path + ".Priority", 0);
+        }
+
+        config.setIntArray(path + ".Slots", new int[]{slot});
+        config.set(path + ".Type", handler);
     }
 
     private void clearEnchantSlots(@NotNull InventoryView view) {
@@ -185,8 +235,19 @@ public class EnchantsMenu extends NormalMenu<EnchantsPlugin> implements ConfigBa
             .toArray();
 
 
-        loader.addDefaultItem(MenuItem.buildNextPage(this, NEXT_PAGE_SLOT));
-        loader.addDefaultItem(MenuItem.buildPreviousPage(this, PREVIOUS_PAGE_SLOT));
+        MenuItem nextPage = this.buildNextPageItem();
+        MenuItem previousPage = this.buildPreviousPageItem();
+
+        if (config.contains("Content")) {
+            this.migratePageItem(config, "Content." + NEXT_PAGE_HANDLER, nextPage.getItem(), NEXT_PAGE_HANDLER, NEXT_PAGE_SLOT);
+            this.migratePageItem(config, "Content." + PREVIOUS_PAGE_HANDLER, previousPage.getItem(), PREVIOUS_PAGE_HANDLER, PREVIOUS_PAGE_SLOT);
+            config.remove("Content.page_next");
+            config.remove("Content.page_previous");
+            config.remove("Content.next_page");
+            config.remove("Content.previous_page");
+        }
+
+        loader.addDefaultItem(nextPage);
+        loader.addDefaultItem(previousPage);
     }
 }
-
