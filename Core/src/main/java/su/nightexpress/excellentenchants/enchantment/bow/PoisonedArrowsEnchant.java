@@ -28,7 +28,7 @@ public class PoisonedArrowsEnchant extends GameEnchantment implements BowEnchant
     public PoisonedArrowsEnchant(@NotNull EnchantsPlugin plugin, @NotNull EnchantManager manager, @NotNull Path file, @NotNull EnchantContext context) {
         super(plugin, manager, file, context);
         this.addComponent(EnchantComponent.ARROW, ArrowEffects.basic(Particle.ITEM_SLIME));
-        this.addComponent(EnchantComponent.PROBABILITY, Probability.addictive(8, 3));
+        this.addComponent(EnchantComponent.PROBABILITY, Probability.addictive(0, 17D / 3D));
         this.addComponent(EnchantComponent.POTION_EFFECT, PotionEffects.temporal(PotionEffectType.POISON, Modifier.addictive(3).perLevel(1).capacity(10)));
     }
 

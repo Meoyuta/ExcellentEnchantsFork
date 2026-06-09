@@ -28,7 +28,7 @@ public class DarknessArrowsEnchant extends GameEnchantment implements BowEnchant
     public DarknessArrowsEnchant(@NotNull EnchantsPlugin plugin, @NotNull EnchantManager manager, @NotNull Path file, @NotNull EnchantContext context) {
         super(plugin, manager, file, context);
         this.addComponent(EnchantComponent.ARROW, ArrowEffects.basic(Particle.ASH));
-        this.addComponent(EnchantComponent.PROBABILITY, Probability.addictive(10, 5));
+        this.addComponent(EnchantComponent.PROBABILITY, Probability.addictive(0, 25D / 3D));
         this.addComponent(EnchantComponent.POTION_EFFECT, PotionEffects.temporal(PotionEffectType.DARKNESS, Modifier.addictive(2.5).perLevel(0.5)));
     }
 

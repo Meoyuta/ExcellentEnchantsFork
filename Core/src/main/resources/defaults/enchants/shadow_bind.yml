@@ -1,0 +1,25 @@
+Definition:
+  DisplayName: <c:#279CF5>抑影</c>
+  Description:
+  - <gray>击中末影人时有 %enchantment_trigger_chance%% 几率阻止其瞬移 %duration% 秒。</gray>
+  Weight: 5
+  MaxLevel: 4
+  MinCost:
+    Base: 1
+    Per_Level: 16
+  MaxCost:
+    Base: 6
+    Per_Level: 16
+  AnvilCost: 4
+  SupportedItems: swords_axes
+  PrimaryItems: sword
+  Exclusives: []
+Distribution:
+  Treasure: false
+  Tradeable: true
+  TradeTypes:
+  - DESERT_COMMON
+  On_Mob_Spawn_Equipment: true
+  On_Traded_Equipment: true
+  On_Random_Loot: true
+  Discoverable: true

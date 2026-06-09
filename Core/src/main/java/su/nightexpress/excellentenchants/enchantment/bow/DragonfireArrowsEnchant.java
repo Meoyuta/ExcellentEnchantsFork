@@ -42,7 +42,7 @@ public class DragonfireArrowsEnchant extends GameEnchantment implements ArrowEnc
     public DragonfireArrowsEnchant(@NotNull EnchantsPlugin plugin, @NotNull EnchantManager manager, @NotNull Path file, @NotNull EnchantContext context) {
         super(plugin, manager, file, context);
         this.addComponent(EnchantComponent.ARROW, ArrowEffects.basic(Particle.DRAGON_BREATH));
-        this.addComponent(EnchantComponent.PROBABILITY, Probability.addictive(4, 3));
+        this.addComponent(EnchantComponent.PROBABILITY, Probability.addictive(0, 13D / 3D));
     }
 
     @Override

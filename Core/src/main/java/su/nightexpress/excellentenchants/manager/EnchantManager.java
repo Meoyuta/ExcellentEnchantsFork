@@ -11,6 +11,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import su.nightexpress.excellentenchants.EnchantsFiles;
@@ -49,11 +50,14 @@ public class EnchantManager extends AbstractManager<EnchantsPlugin> {
     private final Map<AbstractArrow, Set<UniParticle>> arrowEffects;
     private final Map<Location, TickedBlock>           tickedBlocks;
     private final Map<UUID, Explosion>                 explosions;
+    private final Set<UUID>                            suppressedExplosionKnockback;
+    private final Map<UUID, Long>                      suppressedEndermanTeleports;
 
     private final EnchantSettings settings;
 
     private final NamespacedKey entitySpawnKey;
     private final NamespacedKey blockEnchantKey;
+    private final NamespacedKey ghastFireballKey;
 
     private EnchantsMenu enchantsMenu;
 
@@ -62,10 +66,13 @@ public class EnchantManager extends AbstractManager<EnchantsPlugin> {
         this.arrowEffects = new ConcurrentHashMap<>();
         this.tickedBlocks = new HashMap<>();
         this.explosions = new HashMap<>();
+        this.suppressedExplosionKnockback = ConcurrentHashMap.newKeySet();
+        this.suppressedEndermanTeleports = new ConcurrentHashMap<>();
         this.settings = new EnchantSettings();
 
         this.entitySpawnKey = new NamespacedKey(plugin, "entity.spawn_reason");
         this.blockEnchantKey = new NamespacedKey(plugin, "block.enchant");
+        this.ghastFireballKey = new NamespacedKey(plugin, "ghast_fireball");
     }
 
     protected void onLoad() {
@@ -101,6 +108,8 @@ public class EnchantManager extends AbstractManager<EnchantsPlugin> {
         this.arrowEffects.clear();
         this.tickedBlocks.clear();
         this.explosions.clear();
+        this.suppressedExplosionKnockback.clear();
+        this.suppressedEndermanTeleports.clear();
     }
 
     private void saveUnyieldingMemory() {
@@ -273,11 +282,41 @@ public class EnchantManager extends AbstractManager<EnchantsPlugin> {
         return name == null ? null : Enums.get(name, CreatureSpawnEvent.SpawnReason.class);
     }
 
+    public void markGhastFireball(@NotNull Fireball fireball) {
+        fireball.getPersistentDataContainer().set(this.ghastFireballKey, PersistentDataType.BYTE, (byte) 1);
+    }
+
+    public boolean isGhastFireball(@NotNull Entity entity) {
+        return entity.getPersistentDataContainer().has(this.ghastFireballKey, PersistentDataType.BYTE);
+    }
+
+    public void suppressEndermanTeleport(@NotNull Enderman enderman, long durationTicks) {
+        if (durationTicks <= 0L) return;
+
+        long expiresAt = System.currentTimeMillis() + (durationTicks * 50L);
+        this.suppressedEndermanTeleports.merge(enderman.getUniqueId(), expiresAt, Math::max);
+    }
+
+    public boolean isEndermanTeleportSuppressed(@NotNull Enderman enderman) {
+        UUID entityId = enderman.getUniqueId();
+        Long expiresAt = this.suppressedEndermanTeleports.get(entityId);
+        if (expiresAt == null) return false;
+
+        if (expiresAt <= System.currentTimeMillis()) {
+            this.suppressedEndermanTeleports.remove(entityId);
+            return false;
+        }
+        return true;
+    }
+
     public boolean createExplosion(@NotNull LivingEntity entity, @NotNull Location location, float power, boolean fire, boolean destroy, @NotNull Consumer<Explosion> consumer) {
         Explosion explosion = new Explosion(entity);
         consumer.accept(explosion);
 
         this.explosions.put(entity.getUniqueId(), explosion);
+        if (!explosion.hasKnockback()) {
+            this.suppressExplosionKnockback(location, power);
+        }
 
         return entity.getWorld().createExplosion(location, power, fire, destroy, entity);
     }
@@ -295,7 +334,33 @@ public class EnchantManager extends AbstractManager<EnchantsPlugin> {
         Explosion explosion = this.explosions.get(entity.getUniqueId());
         if (explosion == null) return;
 
+        if (!explosion.hasKnockback()) {
+            this.suppressExplosionKnockback(event.getEntity());
+        }
         explosion.handleDamage(event);
+    }
+
+    private void suppressExplosionKnockback(@NotNull Location location, float power) {
+        double radius = Math.max(0D, power * 2D);
+        Set<UUID> marked = new HashSet<>();
+
+        location.getWorld().getNearbyEntities(location, radius, radius, radius, entity -> entity instanceof LivingEntity).forEach(entity -> {
+            UUID entityId = entity.getUniqueId();
+            marked.add(entityId);
+            this.suppressedExplosionKnockback.add(entityId);
+        });
+
+        this.plugin.runTask(() -> this.suppressedExplosionKnockback.removeAll(marked));
+    }
+
+    private void suppressExplosionKnockback(@NotNull Entity entity) {
+        UUID entityId = entity.getUniqueId();
+        this.suppressedExplosionKnockback.add(entityId);
+        this.plugin.runTask(() -> this.suppressedExplosionKnockback.remove(entityId));
+    }
+
+    public boolean isExplosionKnockbackSuppressed(@NotNull Entity entity) {
+        return this.suppressedExplosionKnockback.contains(entity.getUniqueId());
     }
 
     public <T extends CustomEnchantment> void handleInventoryEnchants(@NotNull Player player, @NotNull EnchantHolder<T> holder, @NotNull EnchantUsage<T> usage) {

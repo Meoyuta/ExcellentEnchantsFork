@@ -13,6 +13,8 @@ import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.Repairable;
 import org.bukkit.inventory.view.AnvilView;
 import org.jetbrains.annotations.NotNull;
 import su.nightexpress.excellentenchants.EnchantsPlugin;
@@ -53,9 +55,11 @@ public class AnvilListener extends AbstractListener<EnchantsPlugin> {
 
         this.updateTooExpensiveLimit(event.getView());
 
+        if (this.handleReforge(event, first, second, result)) return;
         if (this.handleRecharge(event, first, second)) return;
+        if (this.anvilCombine(event, first, second, result)) return;
 
-        this.anvilCombine(event, first, second, result);
+        this.clearVanillaAnvilPenalty(event, first, second, result);
     }
 
     private boolean anvilCombine(@NotNull PrepareAnvilEvent event, @NotNull ItemStack first, @NotNull ItemStack second, @NotNull ItemStack result) {
@@ -79,7 +83,7 @@ public class AnvilListener extends AbstractListener<EnchantsPlugin> {
 
         if (countResult > countItem && (countItem >= limit || countResult > limit)) {
             event.setResult(null);
-            return false;
+            return true;
         }
 
         Map<CustomEnchantment, Integer> chargesMap = new HashMap<>();
@@ -92,10 +96,9 @@ public class AnvilListener extends AbstractListener<EnchantsPlugin> {
         });
 
         if (mergeResult.changed() || !chargesMap.isEmpty()) {
+            this.clearRepairPenalty(merged);
             event.setResult(merged);
-            if (mergeResult.changed()) {
-                this.updateRepairCost(event.getView(), mergeResult.conflicting(), mergeResult.changedEnchantments());
-            }
+            this.updateRepairCost(event.getView(), first, second, mergeResult.conflicting(), mergeResult.changedEnchantments());
             return true;
         }
 
@@ -180,21 +183,83 @@ public class AnvilListener extends AbstractListener<EnchantsPlugin> {
         return (int) Math.min(MAX_FORCED_ENCHANT_LEVEL, Math.max(1L, allowedLevel));
     }
 
-    private void updateRepairCost(@NotNull AnvilView anvilView, boolean conflicting, int changedEnchantments) {
-        int repairCost = anvilView.getRepairCost();
-        if (repairCost <= 0) {
-            repairCost = Math.max(1, changedEnchantments);
-        }
+    private boolean handleReforge(@NotNull PrepareAnvilEvent event, @NotNull ItemStack first, @NotNull ItemStack second, @NotNull ItemStack result) {
+        if (first.getType().isAir() || !second.getType().isAir()) return false;
+        if (!this.hasRepairPenalty(first)) return false;
+
+        ItemStack reforged = new ItemStack(result.getType().isAir() ? first : result);
+        this.clearRepairPenalty(reforged);
+
+        event.setResult(reforged);
+        this.updateRepairCost(event.getView(), first, second, false, 1);
+        return true;
+    }
+
+    private boolean clearVanillaAnvilPenalty(@NotNull PrepareAnvilEvent event, @NotNull ItemStack first, @NotNull ItemStack second, @NotNull ItemStack result) {
+        if (result.getType().isAir()) return false;
+        if (!this.hasRepairPenalty(first) && !this.hasRepairPenalty(second) && !this.hasRepairPenalty(result)) return false;
+
+        ItemStack cleanResult = new ItemStack(result);
+        this.clearRepairPenalty(cleanResult);
+
+        event.setResult(cleanResult);
+        this.updateRepairCost(event.getView(), first, second, false, 1);
+        return true;
+    }
+
+    private boolean hasRepairPenalty(@NotNull ItemStack item) {
+        return this.getRepairPenalty(item) > 0;
+    }
+
+    private int getRepairPenalty(@NotNull ItemStack item) {
+        ItemMeta meta = item.getItemMeta();
+        if (!(meta instanceof Repairable repairable)) return 0;
+        if (!repairable.hasRepairCost()) return 0;
+
+        return Math.max(0, repairable.getRepairCost());
+    }
+
+    private boolean clearRepairPenalty(@NotNull ItemStack item) {
+        ItemMeta meta = item.getItemMeta();
+        if (!(meta instanceof Repairable repairable)) return false;
+        if (!repairable.hasRepairCost() || repairable.getRepairCost() <= 0) return false;
+
+        repairable.setRepairCost(0);
+        item.setItemMeta(repairable);
+        return true;
+    }
+
+    private void updateRepairCost(@NotNull AnvilView anvilView,
+                                  @NotNull ItemStack first,
+                                  @NotNull ItemStack second,
+                                  boolean conflicting,
+                                  int changedEnchantments) {
+        int fallbackCost = Math.max(1, changedEnchantments);
+        int repairCost = this.getPenaltyFreeRepairCost(anvilView, first, second, fallbackCost);
 
         if (conflicting) {
             repairCost = (int) Math.ceil((double) repairCost * this.settings.getAnvilConflictPenaltyMultiplier());
         }
 
         int finalRepairCost = Math.max(1, repairCost);
+        anvilView.setRepairCost(finalRepairCost);
+        this.applyTooExpensiveLimit(anvilView);
+
         this.plugin.runTask(() -> {
             anvilView.setRepairCost(finalRepairCost);
             this.applyTooExpensiveLimit(anvilView);
         });
+    }
+
+    private int getPenaltyFreeRepairCost(@NotNull AnvilView anvilView,
+                                         @NotNull ItemStack first,
+                                         @NotNull ItemStack second,
+                                         int fallbackCost) {
+        int repairCost = anvilView.getRepairCost();
+        int penalty = this.getRepairPenalty(first) + this.getRepairPenalty(second);
+        int penaltyFreeCost = repairCost - penalty;
+
+        return penaltyFreeCost > 0 ? penaltyFreeCost : Math.max(1, fallbackCost);
     }
 
     private void updateTooExpensiveLimit(@NotNull AnvilView anvilView) {
@@ -227,6 +292,7 @@ public class AnvilListener extends AbstractListener<EnchantsPlugin> {
         }
 
         PDCUtil.set(recharged, this.rechargedKey, count);
+        this.clearRepairPenalty(recharged);
         event.setResult(recharged);
 
         this.plugin.runTask(() -> {

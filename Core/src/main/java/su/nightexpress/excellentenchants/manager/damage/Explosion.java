@@ -13,9 +13,11 @@ public class Explosion {
 
     private Consumer<EntityExplodeEvent> onExplode;
     private Consumer<EntityDamageByEntityEvent> onDamage;
+    private boolean knockback;
 
     public Explosion(@NotNull LivingEntity owner) {
         this.owner = owner;
+        this.knockback = true;
     }
 
     public void handleExplosion(@NotNull EntityExplodeEvent event) {
@@ -41,5 +43,13 @@ public class Explosion {
 
     public void setOnDamage(@NotNull Consumer<EntityDamageByEntityEvent> onDamage) {
         this.onDamage = onDamage;
+    }
+
+    public boolean hasKnockback() {
+        return this.knockback;
+    }
+
+    public void setKnockback(boolean knockback) {
+        this.knockback = knockback;
     }
 }

@@ -40,6 +40,7 @@ public class EnchantsMenu extends NormalMenu<EnchantsPlugin> implements ConfigBa
 
     private static final String CONFLICTS = "%conflicts%";
     private static final String CHARGES   = "%charges%";
+    private static final String ID_LINE   = LIGHT_YELLOW.wrap("ID: ") + LIGHT_GRAY.wrap(ENCHANTMENT_ID);
 
     private final NamespacedKey levelKey;
 
@@ -279,6 +280,7 @@ public class EnchantsMenu extends NormalMenu<EnchantsPlugin> implements ConfigBa
                 DARK_GRAY.wrap("(click to switch levels)"),
                 EMPTY_IF_ABOVE,
                 LIGHT_YELLOW.wrap(BOLD.wrap("Info:")),
+                ID_LINE,
                 LIGHT_YELLOW.wrap("▪ " + LIGHT_GRAY.wrap("Applies to: ") + ENCHANTMENT_FIT_ITEM_TYPES),
                 LIGHT_YELLOW.wrap("▪ " + LIGHT_GRAY.wrap("Levels: ") + ENCHANTMENT_LEVEL_MIN + LIGHT_GRAY.wrap(" - ") + ENCHANTMENT_LEVEL_MAX),
                 EMPTY_IF_BELOW,
@@ -286,6 +288,7 @@ public class EnchantsMenu extends NormalMenu<EnchantsPlugin> implements ConfigBa
                 EMPTY_IF_BELOW,
                 CONFLICTS
             )).read(config);
+        this.enchantLoreMain = withEnchantIdLine(this.enchantLoreMain);
 
         this.enchantLoreConflicts = ConfigValue.create("Enchantment.Lore.Conflicts",
             Lists.newList(
@@ -301,5 +304,22 @@ public class EnchantsMenu extends NormalMenu<EnchantsPlugin> implements ConfigBa
         this.enchantSlots = Arrays.stream(ConfigValue.create("Enchantment.Slots", IntStream.range(0, 45).toArray()).read(config))
             .distinct()
             .toArray();
+    }
+
+    @NotNull
+    private static List<String> withEnchantIdLine(@NotNull List<String> lore) {
+        if (lore.stream().anyMatch(line -> line.contains(ENCHANTMENT_ID))) return lore;
+
+        List<String> updated = new ArrayList<>(lore);
+        int insertIndex = updated.size();
+        for (int index = 0; index < updated.size(); index++) {
+            String line = updated.get(index);
+            if (line.contains(ENCHANTMENT_FIT_ITEM_TYPES) || line.contains(ENCHANTMENT_LEVEL_MIN)) {
+                insertIndex = index;
+                break;
+            }
+        }
+        updated.add(insertIndex, ID_LINE);
+        return updated;
     }
 }

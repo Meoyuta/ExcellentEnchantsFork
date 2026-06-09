@@ -1,7 +1,7 @@
 Settings:
   Charges: false
 Definition:
-  DisplayName: '<#279CF5>百折不挠</#279CF5>'
+  DisplayName: '<#279CF5>不屈</#279CF5>'
   Description:
     - '<gray>当附魔的不死图腾触发后，获得持续到死亡的适应减伤。</gray>'
     - '<gray>连续受到同种伤害至少 %unyielding_minimum_streak% 次后，后续同种伤害按连续次数逐步降低。</gray>'
@@ -45,5 +45,10 @@ Unyielding:
   Reduction_Base: 0.95
   Immunity_Threshold: 0.001
   Ancient_City_Loot:
+    Chance: 0.15
     Min_Books: 1
     Max_Books: 2
+  Other_Ruins_Loot:
+    Chance: 0.01
+    Min_Books: 1
+    Max_Books: 1

@@ -30,30 +30,20 @@ import java.nio.file.Path;
 
 public class ExplosiveArrowsEnchant extends GameEnchantment implements ArrowEnchant {
 
-    private boolean fireSpread;
     private boolean damageItems;
-    private boolean damageBlocks;
     private Modifier power;
 
     public ExplosiveArrowsEnchant(@NotNull EnchantsPlugin plugin, @NotNull EnchantManager manager, @NotNull Path file, @NotNull EnchantContext context) {
         super(plugin, manager, file, context);
         this.addComponent(EnchantComponent.ARROW, ArrowEffects.basic(Particle.SMOKE));
-        this.addComponent(EnchantComponent.PROBABILITY, Probability.addictive(3, 2));
+        this.addComponent(EnchantComponent.PROBABILITY, Probability.addictive(0, 3));
     }
 
     @Override
     protected void loadAdditional(@NotNull FileConfig config) {
-        this.fireSpread = ConfigValue.create("Explosion.Fire_Spread",
-            true,
-            "Controls whether explosion set nearby blocks on fire.").read(config);
-
         this.damageItems = ConfigValue.create("Explosion.Damage_Items",
             false,
             "Controls whether explosion can destroy ground items.").read(config);
-
-        this.damageBlocks = ConfigValue.create("Explosion.Damage_Blocks",
-            false,
-            "Controls whether explosion can break blocks.").read(config);
 
         this.power = Modifier.load(config, "Explosion.Power",
             Modifier.addictive(1).perLevel(1).capacity(5),
@@ -64,14 +54,6 @@ public class ExplosiveArrowsEnchant extends GameEnchantment implements ArrowEnch
 
     public final double getPower(int level) {
         return this.power.getValue(level);
-    }
-
-    public final boolean isFireSpread() {
-        return this.fireSpread;
-    }
-
-    public final boolean isDamageBlocks() {
-        return this.damageBlocks;
     }
 
     @Override
@@ -90,7 +72,8 @@ public class ExplosiveArrowsEnchant extends GameEnchantment implements ArrowEnch
         Location location = projectile.getLocation();
         float power = (float) this.getPower(level);
 
-        this.plugin.getEnchantManager().createExplosion(shooter, location, power, this.fireSpread, this.damageBlocks, explosion -> {
+        this.plugin.getEnchantManager().createExplosion(shooter, location, power, false, false, explosion -> {
+            explosion.setKnockback(false);
             if (!this.damageItems) explosion.setOnDamage(damageEvent -> {
                 if (damageEvent.getEntity() instanceof Item || damageEvent.getEntity() instanceof ItemFrame) {
                     damageEvent.setCancelled(true);

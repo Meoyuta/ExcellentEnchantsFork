@@ -1,7 +1,8 @@
 Definition:
   DisplayName: <c:#279CF5>恶灵矢</c>
   Description:
-  - <gray>发射火球而非箭矢。</gray>
+  - <gray>发射无伤害火球而非箭矢。</gray>
+  - <gray>火球只造成冲击力，不破坏方块也不会起火。</gray>
   Weight: 1
   MaxLevel: 1
   MinCost:

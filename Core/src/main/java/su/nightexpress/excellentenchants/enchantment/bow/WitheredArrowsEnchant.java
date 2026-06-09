@@ -28,7 +28,7 @@ public class WitheredArrowsEnchant extends GameEnchantment implements BowEnchant
     public WitheredArrowsEnchant(@NotNull EnchantsPlugin plugin, @NotNull EnchantManager manager, @NotNull Path file, @NotNull EnchantContext context) {
         super(plugin, manager, file, context);
         this.addComponent(EnchantComponent.ARROW, ArrowEffects.basic(Particle.WITCH));
-        this.addComponent(EnchantComponent.PROBABILITY, Probability.addictive(5, 3));
+        this.addComponent(EnchantComponent.PROBABILITY, Probability.addictive(0, 14D / 3D));
         this.addComponent(EnchantComponent.POTION_EFFECT, PotionEffects.temporal(PotionEffectType.WITHER, Modifier.addictive(3).perLevel(1).capacity(10)));
     }
 

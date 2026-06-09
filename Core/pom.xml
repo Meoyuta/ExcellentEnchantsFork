@@ -5,7 +5,7 @@
     <parent>
         <artifactId>ExcellentEnchants</artifactId>
         <groupId>su.nightexpress.excellentenchants</groupId>
-        <version>5.4.8</version>
+        <version>5.4.9</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -40,7 +40,7 @@
         <dependency>
             <groupId>su.nightexpress.excellentenchants</groupId>
             <artifactId>API</artifactId>
-            <version>5.4.8</version>
+            <version>5.4.9</version>
         </dependency>
 
         <!-- NMS modules loaded at runtime via reflection -->
@@ -48,13 +48,13 @@
         <dependency>
             <groupId>su.nightexpress.excellentenchants</groupId>
             <artifactId>tooltip-packetevents</artifactId>
-            <version>5.4.8</version>
+            <version>5.4.9</version>
         </dependency>
 
         <dependency>
             <groupId>su.nightexpress.excellentenchants</groupId>
             <artifactId>tooltip-protocollib</artifactId>
-            <version>5.4.8</version>
+            <version>5.4.9</version>
         </dependency>
 
         <!-- compat-mythicmobs: optional, depends on slow external repo -->

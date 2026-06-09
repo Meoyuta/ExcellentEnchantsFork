@@ -26,7 +26,7 @@ public class Lang implements LangContainer {
     public static final TextLocale COMMAND_RANDOM_BOOK_DESC = LangEntry.builder("Command.RandomBook.Desc").text("Give a book with random enchantment.");
     public static final TextLocale COMMAND_GIVE_FUEL_DESC   = LangEntry.builder("Command.GiveFuel.Desc").text("Give enchantment fuel item.");
     public static final TextLocale COMMAND_QUERY_DESC       = LangEntry.builder("Command.Query.Desc").text("Query enchantment runtime status.");
-    public static final TextLocale COMMAND_UNYIELDING_DESC  = LangEntry.builder("Command.Unyielding.Desc").text("Set player's Unyielding active flag.");
+    public static final TextLocale COMMAND_UNYIELDING_DESC  = LangEntry.builder("Command.Unyielding.Desc").text("Set player's unyielding active flag.");
 
     public static final MessageLocale COMMAND_LIST_DONE_OTHERS = LangEntry.builder("Command.List.DoneOthers").chatMessage(
         GRAY.wrap("Opened enchantments GUI for " + SOFT_YELLOW.wrap(PLAYER_NAME) + ".")
@@ -37,23 +37,23 @@ public class Lang implements LangContainer {
     );
 
     public static final MessageLocale COMMAND_QUERY_UNYIELDING_UNAVAILABLE = LangEntry.builder("Command.Query.Unyielding.Unavailable").chatMessage(
-        SOFT_RED.wrap("Unyielding enchantment is not loaded.")
+        SOFT_RED.wrap(GENERIC_ENCHANT + " enchantment is not loaded.")
     );
 
     public static final MessageLocale COMMAND_QUERY_UNYIELDING_INACTIVE = LangEntry.builder("Command.Query.Unyielding.Inactive").chatMessage(
-        GRAY.wrap("Unyielding is inactive. Trigger a totem enchanted with it first, or enable the flag with the admin command.")
+        GRAY.wrap(GENERIC_ENCHANT + " is inactive. Trigger a totem enchanted with it first, or enable the flag with the admin command.")
     );
 
     public static final MessageLocale COMMAND_QUERY_UNYIELDING_WAITING = LangEntry.builder("Command.Query.Unyielding.Waiting").chatMessage(
-        GRAY.wrap("Unyielding is active, but no damage types have been recorded yet.")
+        GRAY.wrap(GENERIC_ENCHANT + " is active, but no damage types have been recorded yet.")
     );
 
     public static final MessageLocale COMMAND_QUERY_UNYIELDING_HEADER = LangEntry.builder("Command.Query.Unyielding.Header").chatMessage(
-        GRAY.wrap("──────── " + SOFT_YELLOW.wrap("Unyielding Status") + " ────────")
+        GRAY.wrap("──────── " + SOFT_YELLOW.wrap(GENERIC_ENCHANT + " Status") + " ────────")
     );
 
     public static final MessageLocale COMMAND_QUERY_UNYIELDING_STATUS = LangEntry.builder("Command.Query.Unyielding.Status").chatMessage(
-        GRAY.wrap("Unyielding " + SOFT_YELLOW.wrap(GENERIC_TYPE) + ": " + SOFT_YELLOW.wrap(GENERIC_AMOUNT) +
+        GRAY.wrap(GENERIC_ENCHANT + " " + SOFT_YELLOW.wrap(GENERIC_TYPE) + ": " + SOFT_YELLOW.wrap(GENERIC_AMOUNT) +
             " hits, next same-type damage multiplier " + SOFT_YELLOW.wrap(GENERIC_MODIFIER) +
             ", reduction " + SOFT_YELLOW.wrap(GENERIC_DAMAGE + "%") + ".")
     );
@@ -63,15 +63,15 @@ public class Lang implements LangContainer {
     );
 
     public static final MessageLocale UNYIELDING_IMMUNITY_REACHED = LangEntry.builder("Unyielding.ImmunityReached").chatMessage(
-        GRAY.wrap("Unyielding has made you immune to " + SOFT_YELLOW.wrap(GENERIC_TYPE) + " damage.")
+        GRAY.wrap(GENERIC_ENCHANT + " has made you immune to " + SOFT_YELLOW.wrap(GENERIC_TYPE) + " damage.")
     );
 
     public static final MessageLocale COMMAND_UNYIELDING_ENABLED = LangEntry.builder("Command.Unyielding.Enabled").chatMessage(
-        GRAY.wrap("Enabled the Unyielding flag for " + SOFT_YELLOW.wrap(PLAYER_DISPLAY_NAME) + ".")
+        GRAY.wrap("Enabled the " + GENERIC_ENCHANT + " flag for " + SOFT_YELLOW.wrap(PLAYER_DISPLAY_NAME) + ".")
     );
 
     public static final MessageLocale COMMAND_UNYIELDING_DISABLED = LangEntry.builder("Command.Unyielding.Disabled").chatMessage(
-        GRAY.wrap("Disabled the Unyielding flag for " + SOFT_YELLOW.wrap(PLAYER_DISPLAY_NAME) + " and cleared its tracked status.")
+        GRAY.wrap("Disabled the " + GENERIC_ENCHANT + " flag for " + SOFT_YELLOW.wrap(PLAYER_DISPLAY_NAME) + " and cleared its tracked status.")
     );
 
 

@@ -36,7 +36,7 @@ public class VampiricArrowsEnchant extends GameEnchantment implements ArrowEncha
     public VampiricArrowsEnchant(@NotNull EnchantsPlugin plugin, @NotNull EnchantManager manager, @NotNull Path file, @NotNull EnchantContext context) {
         super(plugin, manager, file, context);
         this.addComponent(EnchantComponent.ARROW, new ArrowEffects(UniParticle.redstone(Color.RED, 1F)));
-        this.addComponent(EnchantComponent.PROBABILITY, Probability.addictive(20, 5));
+        this.addComponent(EnchantComponent.PROBABILITY, Probability.addictive(0, 35D / 3D));
     }
 
     @Override

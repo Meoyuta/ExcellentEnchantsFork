@@ -307,25 +307,41 @@ public class BaseCommands {
         }
 
         CustomEnchantment enchantment = EnchantRegistry.getById(UnyieldingEnchant.ID);
+        String enchantName = enchantment == null ? UnyieldingEnchant.ID : enchantment.getDisplayName();
         if (!(enchantment instanceof UnyieldingEnchant unyieldingEnchant)) {
-            context.send(Lang.COMMAND_QUERY_UNYIELDING_HEADER);
-            context.send(Lang.COMMAND_QUERY_UNYIELDING_UNAVAILABLE);
+            context.send(Lang.COMMAND_QUERY_UNYIELDING_HEADER, replacer -> replacer
+                .replace("百折不挠", enchantName)
+                .replace("Unyielding", enchantName)
+                .replace(EnchantsPlaceholders.GENERIC_ENCHANT, enchantName));
+            context.send(Lang.COMMAND_QUERY_UNYIELDING_UNAVAILABLE, replacer -> replacer
+                .replace("百折不挠", enchantName)
+                .replace("Unyielding", enchantName)
+                .replace(EnchantsPlaceholders.GENERIC_ENCHANT, enchantName));
             context.send(Lang.COMMAND_QUERY_UNYIELDING_FOOTER);
             return true;
         }
 
-        context.send(Lang.COMMAND_QUERY_UNYIELDING_HEADER);
+        context.send(Lang.COMMAND_QUERY_UNYIELDING_HEADER, replacer -> replacer
+            .replace("百折不挠", enchantName)
+            .replace("Unyielding", enchantName)
+            .replace(EnchantsPlaceholders.GENERIC_ENCHANT, enchantName));
 
         var statusesOptional = unyieldingEnchant.getDamageStatuses(player);
         if (statusesOptional.isEmpty()) {
-            context.send(Lang.COMMAND_QUERY_UNYIELDING_INACTIVE);
+            context.send(Lang.COMMAND_QUERY_UNYIELDING_INACTIVE, replacer -> replacer
+                .replace("百折不挠", enchantName)
+                .replace("Unyielding", enchantName)
+                .replace(EnchantsPlaceholders.GENERIC_ENCHANT, enchantName));
             context.send(Lang.COMMAND_QUERY_UNYIELDING_FOOTER);
             return true;
         }
 
         var statuses = statusesOptional.get();
         if (statuses.isEmpty()) {
-            context.send(Lang.COMMAND_QUERY_UNYIELDING_WAITING);
+            context.send(Lang.COMMAND_QUERY_UNYIELDING_WAITING, replacer -> replacer
+                .replace("百折不挠", enchantName)
+                .replace("Unyielding", enchantName)
+                .replace(EnchantsPlaceholders.GENERIC_ENCHANT, enchantName));
             context.send(Lang.COMMAND_QUERY_UNYIELDING_FOOTER);
             return true;
         }
@@ -333,6 +349,9 @@ public class BaseCommands {
         statuses.forEach(status -> {
             String damageId = status.damageId();
             context.send(Lang.COMMAND_QUERY_UNYIELDING_STATUS, replacer -> replacer
+                .replace("百折不挠", enchantName)
+                .replace("Unyielding", enchantName)
+                .replace(EnchantsPlaceholders.GENERIC_ENCHANT, enchantName)
                 .replace(EnchantsPlaceholders.GENERIC_TYPE, UnyieldingEnchant.formatDamageId(damageId))
                 .replace(EnchantsPlaceholders.GENERIC_NAME, damageId)
                 .replace(EnchantsPlaceholders.GENERIC_AMOUNT, NumberUtil.format(status.streak()))
@@ -350,12 +369,19 @@ public class BaseCommands {
 
         CustomEnchantment enchantment = EnchantRegistry.getById(UnyieldingEnchant.ID);
         if (!(enchantment instanceof UnyieldingEnchant unyieldingEnchant)) {
-            context.send(Lang.COMMAND_QUERY_UNYIELDING_UNAVAILABLE);
+            context.send(Lang.COMMAND_QUERY_UNYIELDING_UNAVAILABLE, replacer -> replacer
+                .replace("百折不挠", UnyieldingEnchant.ID)
+                .replace("Unyielding", UnyieldingEnchant.ID)
+                .replace(EnchantsPlaceholders.GENERIC_ENCHANT, UnyieldingEnchant.ID));
             return false;
         }
 
+        String enchantName = enchantment.getDisplayName();
         unyieldingEnchant.setActive(player, state);
         context.send(state ? Lang.COMMAND_UNYIELDING_ENABLED : Lang.COMMAND_UNYIELDING_DISABLED, replacer -> replacer
+            .replace("百折不挠", enchantName)
+            .replace("Unyielding", enchantName)
+            .replace(EnchantsPlaceholders.GENERIC_ENCHANT, enchantName)
             .replace(EnchantsPlaceholders.forPlayer(player))
         );
         return true;

@@ -2,15 +2,21 @@ package su.nightexpress.excellentenchants.manager.listener;
 
 import org.bukkit.damage.DamageSource;
 import org.bukkit.damage.DamageType;
+import org.bukkit.entity.Enderman;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockExplodeEvent;
+import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.entity.EntityKnockbackEvent;
+import org.bukkit.event.entity.EntityTeleportEvent;
+import org.bukkit.event.entity.ExplosionPrimeEvent;
 import org.bukkit.event.world.LootGenerateEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -57,14 +63,14 @@ public class GenericListener extends AbstractListener<EnchantsPlugin> {
     }
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
-    public void onAncientCityLoot(LootGenerateEvent event) {
+    public void onUnyieldingLoot(LootGenerateEvent event) {
         if (event.isPlugin()) return;
 
         CustomEnchantment enchantment = EnchantRegistry.getById(UnyieldingEnchant.ID);
         if (!(enchantment instanceof UnyieldingEnchant unyielding)) return;
         if (this.manager.getSettings().isEnchantDisabledInWorld(event.getWorld(), unyielding)) return;
 
-        unyielding.populateAncientCityLoot(event);
+        unyielding.populateRuinLoot(event);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -82,11 +88,54 @@ public class GenericListener extends AbstractListener<EnchantsPlugin> {
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onTickedBlockEntityExplode(EntityExplodeEvent event) {
+        if (this.manager.isGhastFireball(event.getEntity())) {
+            event.blockList().clear();
+            event.setYield(0F);
+            return;
+        }
+
         event.blockList().forEach(this.manager::removeTickedBlock);
 
         if (event.getEntity() instanceof LivingEntity entity) {
             this.manager.handleEnchantExplosion(event, entity);
         }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onGhastFireballPrime(ExplosionPrimeEvent event) {
+        if (!this.manager.isGhastFireball(event.getEntity())) return;
+
+        event.setFire(false);
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onGhastFireballIgnite(BlockIgniteEvent event) {
+        Entity entity = event.getIgnitingEntity();
+        if (entity == null || !this.manager.isGhastFireball(entity)) return;
+
+        event.setCancelled(true);
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onGhastFireballDamage(EntityDamageByEntityEvent event) {
+        if (!this.isGhastFireballDamage(event)) return;
+
+        event.setDamage(0D);
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onSuppressedEndermanTeleport(EntityTeleportEvent event) {
+        if (!(event.getEntity() instanceof Enderman enderman)) return;
+        if (!this.manager.isEndermanTeleportSuppressed(enderman)) return;
+
+        event.setCancelled(true);
+    }
+
+    private boolean isGhastFireballDamage(@NotNull EntityDamageByEntityEvent event) {
+        if (this.manager.isGhastFireball(event.getDamager())) return true;
+
+        Entity directEntity = event.getDamageSource().getDirectEntity();
+        return directEntity != null && this.manager.isGhastFireball(directEntity);
     }
 
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
@@ -98,5 +147,13 @@ public class GenericListener extends AbstractListener<EnchantsPlugin> {
         if (!(source.getCausingEntity() instanceof LivingEntity entity)) return;
 
         this.manager.handleEnchantExplosionDamage(event, entity);
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onExplosionKnockback(EntityKnockbackEvent event) {
+        if (event.getCause() != EntityKnockbackEvent.KnockbackCause.EXPLOSION) return;
+        if (!this.manager.isExplosionKnockbackSuppressed(event.getEntity())) return;
+
+        event.setCancelled(true);
     }
 }

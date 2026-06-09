@@ -2,6 +2,7 @@ Definition:
   DisplayName: <c:#279CF5>爆炸之箭</c>
   Description:
   - <gray>%enchantment_trigger_chance%% 几率射出爆炸箭矢。</gray>
+  - <gray>爆炸会造成伤害，但不会破坏方块、起火或击退目标。</gray>
   Weight: 5
   MaxLevel: 3
   MinCost:

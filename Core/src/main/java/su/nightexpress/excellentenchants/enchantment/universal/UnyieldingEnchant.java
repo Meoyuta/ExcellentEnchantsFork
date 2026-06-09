@@ -49,6 +49,9 @@ public class UnyieldingEnchant extends GameEnchantment implements ResurrectEncha
     private static final String DATA_DAMAGE_ID              = "Damage_Id";
     private static final String DATA_STREAK                 = "Streak";
     private static final String DATA_IMMUNITY_NOTIFICATIONS = "Immunity_Notifications";
+    private static final String VANILLA_NAMESPACE           = "minecraft";
+    private static final String CHEST_LOOT_PREFIX           = "chests/";
+    private static final String ARCHAEOLOGY_LOOT_PREFIX     = "archaeology/";
 
     private final Map<UUID, DamageMemory> damageMemoryMap;
     private final Path                    dataFile;
@@ -56,8 +59,12 @@ public class UnyieldingEnchant extends GameEnchantment implements ResurrectEncha
     private int    minimumStreak;
     private double reductionBase;
     private double immunityThreshold;
+    private double ancientCityLootChance;
     private int    ancientCityMinBooks;
     private int    ancientCityMaxBooks;
+    private double otherRuinsLootChance;
+    private int    otherRuinsMinBooks;
+    private int    otherRuinsMaxBooks;
 
     public UnyieldingEnchant(@NotNull EnchantsPlugin plugin, @NotNull EnchantManager manager, @NotNull Path file, @NotNull EnchantContext context) {
         super(plugin, manager, file, context);
@@ -87,6 +94,12 @@ public class UnyieldingEnchant extends GameEnchantment implements ResurrectEncha
             "If reduced damage falls below this value, the damage is set to zero."
         ).read(config));
 
+        this.ancientCityLootChance = readChance(config, "Unyielding.Ancient_City_Loot.Chance",
+            0.15D,
+            "Chance for an unyielding enchanted book to be added to Ancient City loot.",
+            "Use 0.15 for 15% chance."
+        );
+
         this.ancientCityMinBooks = Math.max(0, ConfigValue.create("Unyielding.Ancient_City_Loot.Min_Books",
             1,
             "Minimum unyielding enchanted books added to Ancient City loot."
@@ -95,6 +108,22 @@ public class UnyieldingEnchant extends GameEnchantment implements ResurrectEncha
         this.ancientCityMaxBooks = Math.max(this.ancientCityMinBooks, ConfigValue.create("Unyielding.Ancient_City_Loot.Max_Books",
             2,
             "Maximum unyielding enchanted books added to Ancient City loot."
+        ).read(config));
+
+        this.otherRuinsLootChance = readChance(config, "Unyielding.Other_Ruins_Loot.Chance",
+            0.01D,
+            "Chance for an unyielding enchanted book to be added to other vanilla structure loot.",
+            "Use 0.01 for 1% chance."
+        );
+
+        this.otherRuinsMinBooks = Math.max(0, ConfigValue.create("Unyielding.Other_Ruins_Loot.Min_Books",
+            1,
+            "Minimum unyielding enchanted books added to other vanilla structure loot."
+        ).read(config));
+
+        this.otherRuinsMaxBooks = Math.max(this.otherRuinsMinBooks, ConfigValue.create("Unyielding.Other_Ruins_Loot.Max_Books",
+            1,
+            "Maximum unyielding enchanted books added to other vanilla structure loot."
         ).read(config));
 
         this.loadMemory();
@@ -137,7 +166,11 @@ public class UnyieldingEnchant extends GameEnchantment implements ResurrectEncha
             }
 
             if (immune && memory.immunityNotifications.add(damageId)) {
+                String enchantName = this.getDisplayName();
                 Lang.UNYIELDING_IMMUNITY_REACHED.message().send(player, replacer -> replacer
+                    .replace("百折不挠", enchantName)
+                    .replace("Unyielding", enchantName)
+                    .replace(EnchantsPlaceholders.GENERIC_ENCHANT, enchantName)
                     .replace(EnchantsPlaceholders.GENERIC_TYPE, formatDamageId(damageId))
                     .replace(EnchantsPlaceholders.GENERIC_NAME, damageId)
                 );
@@ -298,20 +331,40 @@ public class UnyieldingEnchant extends GameEnchantment implements ResurrectEncha
         return cleanId.replace('_', ' ');
     }
 
-    public void populateAncientCityLoot(@NotNull LootGenerateEvent event) {
-        if (!this.isAncientCityLoot(event)) return;
-        if (this.ancientCityMaxBooks <= 0) return;
+    public void populateRuinLoot(@NotNull LootGenerateEvent event) {
+        LootType lootType = this.getLootType(event);
+        if (lootType == null) return;
 
-        int amount = ThreadLocalRandom.current().nextInt(this.ancientCityMinBooks, this.ancientCityMaxBooks + 1);
+        double chance = lootType == LootType.ANCIENT_CITY ? this.ancientCityLootChance : this.otherRuinsLootChance;
+        int minBooks = lootType == LootType.ANCIENT_CITY ? this.ancientCityMinBooks : this.otherRuinsMinBooks;
+        int maxBooks = lootType == LootType.ANCIENT_CITY ? this.ancientCityMaxBooks : this.otherRuinsMaxBooks;
+        if (maxBooks <= 0) return;
+        if (chance <= 0D) return;
+        if (ThreadLocalRandom.current().nextDouble() >= chance) return;
+
+        int amount = ThreadLocalRandom.current().nextInt(minBooks, maxBooks + 1);
         for (int index = 0; index < amount; index++) {
             event.getLoot().add(this.createBook());
         }
     }
 
-    private boolean isAncientCityLoot(@NotNull LootGenerateEvent event) {
+    private LootType getLootType(@NotNull LootGenerateEvent event) {
         NamespacedKey lootKey = event.getLootTable().getKey();
+        if (this.isAncientCityLoot(lootKey)) return LootType.ANCIENT_CITY;
+        if (this.isOtherRuinLoot(lootKey)) return LootType.OTHER_RUINS;
 
+        return null;
+    }
+
+    private boolean isAncientCityLoot(@NotNull NamespacedKey lootKey) {
         return lootKey.equals(LootTables.ANCIENT_CITY.getKey()) || lootKey.equals(LootTables.ANCIENT_CITY_ICE_BOX.getKey());
+    }
+
+    private boolean isOtherRuinLoot(@NotNull NamespacedKey lootKey) {
+        if (!lootKey.getNamespace().equals(VANILLA_NAMESPACE)) return false;
+
+        String key = lootKey.getKey();
+        return key.startsWith(CHEST_LOOT_PREFIX) || key.startsWith(ARCHAEOLOGY_LOOT_PREFIX);
     }
 
     @NotNull
@@ -319,6 +372,15 @@ public class UnyieldingEnchant extends GameEnchantment implements ResurrectEncha
         ItemStack book = new ItemStack(Material.ENCHANTED_BOOK);
         EnchantsUtils.add(book, this.getBukkitEnchantment(), EnchantsUtils.randomLevel(this.getBukkitEnchantment()), true);
         return book;
+    }
+
+    private static double readChance(@NotNull FileConfig config, @NotNull String path, double defaultValue, @NotNull String... comments) {
+        return Math.clamp(ConfigValue.create(path, defaultValue, comments).read(config), 0D, 1D);
+    }
+
+    private enum LootType {
+        ANCIENT_CITY,
+        OTHER_RUINS
     }
 
     private static class DamageMemory {
